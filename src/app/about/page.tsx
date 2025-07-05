@@ -22,7 +22,6 @@ export const metadata = {
     type: 'website',
   },
 }
-
 export default function AboutPage() {
   return <About />;
 }
