@@ -2,11 +2,12 @@ const isProd = process.env.NODE_ENV === 'production';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // ✅ static export 사용 (next export 전용)
+  output: 'export',
   trailingSlash: true,
-  assetPrefix: isProd ? '/' : '', 
-  basePath: '',// ✅ "/" 루트 도메인용 프리픽스 (GitHub Pages 루트 도메인에 연결 시)
+  assetPrefix: isProd ? '/' : '', // GitHub Pages + 도메인 대응
   images: {
-    unoptimized: true, // ✅ next/image 비활성화 → 정적 export에 맞춤
+    unoptimized: true, // next/image 최적화 비활성화 (static export용)
   },
 };
+
+export default nextConfig;
