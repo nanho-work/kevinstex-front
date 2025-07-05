@@ -5,7 +5,7 @@ const nextConfig = {
   output: 'export',
   trailingSlash: true,
   basePath: isProd ? '/kevinstex-front' : '',
-  assetPrefix: isProd ? '/keinsrex-front/' : '', // GitHub Pages + 도메인 대응
+  assetPrefix: isProd ? '/keinstex-front/' : '', // GitHub Pages + 도메인 대응
   images: {
     unoptimized: true, // next/image 최적화 비활성화 (static export용)
   },
