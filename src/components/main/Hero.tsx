@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 
+const prefix = process.env.NODE_ENV === 'production' ? '/keinsrex-front' : ''
+
 export default function Hero() {
   return (
     <section className="w-full bg-gradient-to-l from-blue-400 to-white py-16 px-4 hero-font">
@@ -28,7 +30,7 @@ export default function Hero() {
         {/* 우측 영역: 하늘색 */}
         <div className="hidden md:flex relative h-[500px] w-full items-center justify-center">
           <img
-            src="/kwon_profile.png"
+            src={`${prefix}/kwon_profile.png`}
             alt="권도윤 송파세무사 | 디케빈즈택스랩, 케빈즈택스의 권도윤세무사가 세금과 세무를 책임집니다."
             className="h-[90%] object-contain"
           />

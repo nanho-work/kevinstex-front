@@ -4,6 +4,7 @@ import Header from '@/components/Header'
 import FloatingButton from '@/components/FloatingButton'
 import Footer from '@/components/Footer'
 
+const prefix = process.env.NODE_ENV === 'production' ? '/keinsrex-front' : '';
 
 export const metadata = {
   title: '디케빈즈택스랩 | 대한민국 No.1 세무서비스',
@@ -29,7 +30,6 @@ export const metadata = {
         width: 1200,
         height: 630,
         alt: 'KevinTax 대표 이미지',
-        type: '/profile.png',
       },
     ],
     locale: 'ko_KR',
@@ -45,9 +45,9 @@ export const metadata = {
   },
 
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    icon: `${prefix}/favicon.ico`,
+    shortcut: `${prefix}/favicon.ico`,
+    apple: `${prefix}/apple-touch-icon.png`,
   },
 }
 
@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FloatingButton />
         <Footer />
       </body>
-      
+
     </html>
   )
 }

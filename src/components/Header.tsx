@@ -5,6 +5,9 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 
+const prefix = process.env.NODE_ENV === 'production' ? '/keinsrex-front' : ''
+
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
@@ -14,7 +17,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto h-24 flex items-center justify-between">
         {/* 로고 */}
         <Link href="/" className="flex items-center space-x-2">
-          <img src="/logo.png" alt="로고" className="w-56 h-40 object-contain" />
+          <img src={`${prefix}/logo.png`} alt="로고" className="w-56 h-40 object-contain" />
         </Link>
 
         {/* 네비게이션 메뉴 (Desktop Only) */}

@@ -3,6 +3,8 @@
 import '@fontsource/dancing-script';
 import Image from 'next/image';
 
+const prefix = process.env.NODE_ENV === 'production' ? '/keinsrex-front' : ''
+
 export default function About() {
     return (
         <main className="bg-white py-16 px-4 font-Pretendard">
@@ -14,7 +16,7 @@ export default function About() {
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
                     {/* 프로필 이미지 */}
                     <Image
-                        src="/kwon_profile.png"
+                        src={`${prefix}/kwon_profile.png`}
                         alt="권도윤 세무사"
                         width={200}
                         height={200}
