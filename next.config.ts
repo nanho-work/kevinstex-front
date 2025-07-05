@@ -4,7 +4,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const nextConfig = {
   output: 'export',
   trailingSlash: true,
-  assetPrefix: isProd ? '/' : '', // GitHub Pages + 도메인 대응
+  assetPrefix: isProd ? '/keinsrex-front/' : '', // GitHub Pages + 도메인 대응
   images: {
     unoptimized: true, // next/image 최적화 비활성화 (static export용)
   },
