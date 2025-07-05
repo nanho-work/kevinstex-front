@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ 글로벌 폰트 선언은 body 바깥에서 */
+@font-face {
+  font-family: 'KCC-eunyoung';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/KCC-eunyoung-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ✅ 전역 바디 스타일 */
+body {
+  font-family: system-ui, sans-serif;
+  background-color: #ffffff;
+  color: #111827;
+}
