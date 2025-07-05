@@ -11,6 +11,7 @@ interface Service {
   description: string
   image_url: string
 }
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://api.thekevinstaxlab.com'
 
 export default function ServiceCardList() {
   const [services, setServices] = useState<Service[]>([])
@@ -19,7 +20,7 @@ export default function ServiceCardList() {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/services/all`)
+      const res = await fetch(`${BASE_URL}/services/all`)
       const data = await res.json()
       setServices(data)
     } catch (err) {

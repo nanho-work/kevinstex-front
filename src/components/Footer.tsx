@@ -42,14 +42,28 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <footer className="text-center text-xs text-gray-400 mt-10">
-        © 2025 THE KEVIN'S TAX LAB | 제작: <a href="https://example.com" target="_blank" className="underline">NamHoLab | Web. API. Automation.</a>
-      </footer>
+
+      {/* 제작자 정보 */}
+      <div className="text-center text-xs text-gray-400 mt-10">
+        <h3 className="font-semibold text-gray-800 mb-2">Website</h3>
+        <p>ⓒ {new Date().getFullYear()} Yongs Dining</p>
+        <p>
+          Website by{" "}
+          <a
+            href="https://laoncode.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-gray-800 font-medium"
+          >
+            LaonCode
+          </a>
+        </p>
+      </div>
+
+      {/* 폰트 정보 */}
       <p className="text-xs text-gray-400 mt-4 text-center">
         폰트: KCC은영체 ⓒ projectnoonnu (CCL 저작자 표시)
       </p>
-
-      
     </footer>
-  )
+  );
 }

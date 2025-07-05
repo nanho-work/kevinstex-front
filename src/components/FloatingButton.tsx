@@ -9,7 +9,7 @@ export default function FloatingButton() {
         <div className="fixed bottom-6 right-0 z-50 flex flex-col items-center bg-[#F9FAFB] rounded-l-xl shadow-lg overflow-hidden border border-[#D1D5DB]">
 
       {/* 상담 신청하기 */}
-      <Link href="/customer/consult" className="flex items-center justify-center w-24 h-16 border-b border-[#D1D5DB] hover:bg-[#EDF2F7]">
+      <Link href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/ticket?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507060007&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9&fromPanelNum=1&additionalHeight=76&timestamp=202507060007&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9" className="flex items-center justify-center w-24 h-16 border-b border-[#D1D5DB] hover:bg-[#EDF2F7]">
         <div className="flex flex-col items-center text-[#2563eb]">
           <PenLine className="w-5 h-5" />
           <span className="text-xs mt-1">상담신청</span>
