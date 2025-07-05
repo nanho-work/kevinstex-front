@@ -1,4 +1,5 @@
 // src/app/page.tsx
+import './globals.css';
 
 import Hero from '@/components/main/Hero'
 import ReviewSliderSection from '@/components/main/ReviewSliderSection'
