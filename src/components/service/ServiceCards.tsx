@@ -41,12 +41,12 @@ export default function ServiceCardList() {
   }, [])
 
   return (
-    <section className="py-16 px-4 bg-white">
+    <section className="py-16 px-4  bg-white">
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
         {services.map((service, index) => (
           <div
             key={index}
-            className="bg-blue-50 rounded-2xl p-6 shadow-md relative min-h-[180px] cursor-pointer"
+            className="bg-blue-50 rounded-2xl p-6 shadow-md h-[240px] relative min-h-[180px] cursor-pointer"
             onClick={() => onOpenModal(service)}
           >
             <div className="flex justify-between items-start">

@@ -54,11 +54,16 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-grow pt-16">{children}</main>
-        <FloatingButton />
-        <Footer />
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
+      <body className="min-h-screen flex flex-col bg-white text-gray-800 overflow-x-hidden">
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-grow pt-16">{children}</main>
+          <FloatingButton />
+          <Footer />
+        </div>
       </body>
     </html>
   )
