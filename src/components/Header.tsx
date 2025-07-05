@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 
-const prefix = process.env.NODE_ENV === 'production' ? '/keinsrex-front' : ''
+const prefix = ''
 
 
 export default function Header() {

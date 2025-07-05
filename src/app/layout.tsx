@@ -4,7 +4,7 @@ import Header from '@/components/Header'
 import FloatingButton from '@/components/FloatingButton'
 import Footer from '@/components/Footer'
 
-const prefix = process.env.NODE_ENV === 'production' ? '/keinsrex-front' : '';
+const prefix = ''
 
 export const metadata = {
   title: '디케빈즈택스랩 | 대한민국 No.1 세무서비스',

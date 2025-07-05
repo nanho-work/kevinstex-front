@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-const prefix = process.env.NODE_ENV === 'production' ? '/keinsrex-front' : ''
+const prefix = ''
 
 export default function Hero() {
   return (
