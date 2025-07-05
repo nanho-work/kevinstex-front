@@ -60,7 +60,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FloatingButton />
         <Footer />
       </body>
-
     </html>
   )
 }
