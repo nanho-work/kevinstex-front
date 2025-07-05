@@ -63,9 +63,6 @@ export default function Header() {
           <Link href="/location" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/location' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             오시는길
           </Link>
-          <Link href="/consult" onClick={() => setMenuOpen(false)} className="block px-2 py-1 text-gray-700 border-t pt-2">
-            상담 신청하기
-          </Link>
         </div>
       )}
     </header>
