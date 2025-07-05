@@ -3,7 +3,7 @@
 import '@fontsource/dancing-script';
 import Image from 'next/image';
 
-const prefix = process.env.NODE_ENV === 'production' ? '/kevinstex-front' : ''
+const prefix = ''
 
 export default function About() {
     return (

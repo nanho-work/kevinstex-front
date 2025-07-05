@@ -2,13 +2,10 @@ const isProd = process.env.NODE_ENV === 'production';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: 'export', // ✅ static export 사용 (next export 전용)
   trailingSlash: true,
-  basePath: isProd ? '/kevinstex-front' : '',
-  assetPrefix: isProd ? '/kevinstex-front/' : '', // GitHub Pages + 도메인 대응
+  assetPrefix: isProd ? '/' : '', // ✅ "/" 루트 도메인용 프리픽스 (GitHub Pages 루트 도메인에 연결 시)
   images: {
-    unoptimized: true, // next/image 최적화 비활성화 (static export용)
+    unoptimized: true, // ✅ next/image 비활성화 → 정적 export에 맞춤
   },
 };
-
-export default nextConfig;

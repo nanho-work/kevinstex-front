@@ -7,13 +7,25 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.thekevinstaxlab.com/customer/about</loc>
+    <loc>https://www.thekevinstaxlab.com/about</loc>
     <lastmod>2025-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.thekevinstaxlab.com/customer/seivice</loc>
+    <loc>https://www.thekevinstaxlab.com/seivice</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.thekevinstaxlab.com/blog</loc>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.thekevinstaxlab.com/location</loc>
     <lastmod>2025-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

@@ -4,7 +4,7 @@ import Header from '@/components/Header'
 import FloatingButton from '@/components/FloatingButton'
 import Footer from '@/components/Footer'
 
-const prefix = process.env.NODE_ENV === 'production' ? '/kevinstex-front' : ''
+const prefix = ''
 
 export const metadata = {
   title: '디케빈즈택스랩 | 대한민국 No.1 세무서비스',
@@ -34,14 +34,6 @@ export const metadata = {
     ],
     locale: 'ko_KR',
     type: 'website',
-  },
-
-  twitter: {
-    card: 'summary_large_image',
-    title: 'thekevinstaxlab',
-    description: '세금을 그리다. 개인사업자를 위한 쉽고 빠른 세무상담',
-    creator: '@KevinTaxOfficial',
-    images: ['https://thekevinstaxlab.com/kwon_profile.png'],
   },
 
   icons: {
