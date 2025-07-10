@@ -18,8 +18,8 @@ export default function About() {
                     <Image
                         src={`${prefix}/kwon_profile.png`}
                         alt="권도윤 세무사"
-                        width={200}
-                        height={200}
+                        width={350}
+                        height={300}
                         className="rounded-full shadow-md"
                     />
 
@@ -54,9 +54,10 @@ export default function About() {
                         <h2 className="text-xl font-semibold mb-2 text-blue-900">경력</h2>
                         <ul className="list-disc list-inside mb-4">
                             <li>현) 디 케빈즈 택스랩 대표 세무사</li>
-                            <li>전) 남택스&컨설팅 근무</li>
-                            <li>전) 세무법인 배 근무</li>
                             <li>전) 세무법인 혜안 근무</li>
+                            <li>전) 세무법인 배 근무</li>
+                            <li>전) 남택스&컨설팅 근무</li>
+                            
                         </ul>
 
                         <h2 className="text-xl font-semibold mb-2 text-blue-900">전문 분야</h2>
@@ -78,9 +79,11 @@ export default function About() {
 
                         <p
                             className="mt-8 text-right text-gray-500"
-                            style={{ fontFamily: 'KCC-eunyoung', fontSize: '1.5rem' }}
+                            style={{ fontFamily: 'KCC-eunyoung', fontSize: '2.0rem' }}
                         >
-                            디케빈즈택스랩 | 대표 세무사 권도윤
+                            디 케빈즈 택스랩 
+                            <span className="inline-block w-4" />
+  대표 세무사 권도윤
                         </p>
                     </div>
                 </div>
