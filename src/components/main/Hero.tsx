@@ -20,12 +20,14 @@ export default function Hero() {
           <p className="text-gray-600 text-lg max-w-md">
             복잡한 세무, 전문가가 간단하게 해결해드립니다.
           </p>
-          <Link
-            href="/consult"
+          <a
+            href="https://map.naver.com/p/entry/place/1166913410?lng=127.1221551&lat=37.4883000&placePath=/home?bookingRedirectUrl=https%3A%2F%2Fm.booking.naver.com%2Fbooking%2F5%2Fbizes%2F1171914&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&area=pll&c=15.00,0,0,0,dh"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block text-white px-4 py-2 rounded-lg shadow bg-gradient-to-r from-blue-800 to-blue-400 hover:from-blue-900 hover:to-blue-500 transition text-center w-fit"
           >
             지금 상담 신청하기
-          </Link>
+          </a>
         </div>
 
         {/* 우측 이미지 */}

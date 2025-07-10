@@ -45,9 +45,14 @@ export default function Header() {
 
         {/* 상담 버튼 (Desktop) */}
         <div className="hidden md:flex space-x-2">
-          <Link href="/consult" className="px-4 py-1.5 text-sm rounded border font-bold border-gray-300 text-gray-700 hover:bg-gray-100">
+          <a
+            href="https://map.naver.com/p/entry/place/1166913410?lng=127.1221551&lat=37.4883000&placePath=/home?bookingRedirectUrl=https%3A%2F%2Fm.booking.naver.com%2Fbooking%2F5%2Fbizes%2F1171914&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&area=pll&c=15.00,0,0,0,dh"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-1.5 text-sm rounded border font-bold border-gray-300 text-gray-700 hover:bg-gray-100"
+          >
             상담 신청하기
-          </Link>
+          </a>
         </div>
       </div>
 
