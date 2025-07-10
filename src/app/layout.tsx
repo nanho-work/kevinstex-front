@@ -54,8 +54,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <main className="flex-grow pt-16">{children}</main>
           <FloatingButton />
-          <Footer />
         </div>
+
+        {/* 푸터는 제한 밖에서 전체 너비로 */}
+        <Footer />
       </body>
     </html>
   )

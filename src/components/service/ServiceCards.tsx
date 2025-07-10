@@ -52,8 +52,10 @@ export default function ServiceCardList() {
           >
             <div className="flex justify-between items-start">
               <div className="flex-1 pr-4 text-left">
-                <h2 className="text-xl font-bold text-gray-800">{service.title}</h2>
-                <p className="text-sm text-gray-600 mt-1">{service.summary}</p>
+                <h2 className="text-lg md:text-xl font-bold text-gray-800">{service.title}</h2>
+                <p className="text-sm text-gray-600 mt-1 break-words line-clamp-5 md:line-clamp-none">
+                  {service.summary}
+                </p>
               </div>
               <div className="w-28 h-28 rounded-xl overflow-hidden">
                 <img src={service.image_url} alt="icon" className="w-full h-full object-cover" />

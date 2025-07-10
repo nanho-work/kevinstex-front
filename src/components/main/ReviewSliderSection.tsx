@@ -19,18 +19,17 @@ export default function ReviewSliderSection() {
 
     return (
         <section className="py-16 px-4 bg-white">
-            <div className="max-w-7xl mx-auto overflow-x-hidden">
+            <div className="max-w-7xl mx-auto px-4 py-4 text-center text-xs text-gray-400">
                 <h2 className="text-xl md:text-2xl font-bold text-blue-900 mb-6">실제 고객 후기</h2>
                 <Swiper
                     modules={[Autoplay]}
                     spaceBetween={16}
-                    loop
+                    loop={reviews.length > 4}
                     autoplay={{
-                        delay: 2500,
+                        delay: 2000,
                         disableOnInteraction: false,
                     }}
-                    observer
-                    observeParents
+                    rewind={true}
                     breakpoints={{
                         0: { slidesPerView: 1.1 },
                         480: { slidesPerView: 1.2 },
@@ -44,7 +43,7 @@ export default function ReviewSliderSection() {
                     {reviews.map((r) => (
                         <SwiperSlide
                             key={r.id}
-                            className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-gray-50 rounded-xl shadow p-4 h-full flex-shrink-0"
+                            className="w-full max-w-xs sm:max-w-sm md:max-w-md min-w-0 bg-gray-50 rounded-xl shadow p-4 h-full flex-shrink-0"
                         >
                             <div className="flex flex-col justify-between h-full min-h-[180px] max-h-[240px] md:max-h-[280px] overflow-hidden">
                                 <div>
