@@ -6,8 +6,8 @@ const prefix = ''
 
 export default function Hero() {
   return (
-    <section className="w-full bg-gradient-to-l from-blue-400 to-white py-16 px-4 hero-font">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 items-start gap-10">
+    <section className="w-full bg-gradient-to-l from-blue-300 to-white  shadow rounded-lg hero-font">
+      <div className="w-full grid md:grid-cols-2 items-start gap-10">
         {/* 좌측 문구 */}
         <div className="flex flex-col min-h-[400px] md:h-[500px] justify-center space-y-6">
           <p className="text-base text-blue-700 font-sm tracking-wide">세금도 간편하게 톡!</p>
@@ -33,7 +33,7 @@ export default function Hero() {
           <img
             src={`${prefix}/kwon_profile.png`}
             alt="권도윤 송파세무사 | 디케빈즈택스랩, 케빈즈택스의 권도윤세무사가 세금과 세무를 책임집니다."
-            className="h-[120%] object-contain"
+            className="h-[180%] object-contain absolute mt-[55px]"
           />
         </div>
       </div>
