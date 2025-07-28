@@ -47,7 +47,7 @@ export default function Header() {
         </button>
 
         {/* 상담 버튼 (Desktop) */}
-        <div className="hidden md:flex ml-6 pr-4">
+        <div className="hidden md:flex ml-24 pr-4">
           <a
             href="https://map.naver.com/p/entry/place/1166913410?lng=127.1221551&lat=37.4883000&placePath=/home?bookingRedirectUrl=https%3A%2F%2Fm.booking.naver.com%2Fbooking%2F5%2Fbizes%2F1171914&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&area=pll&c=15.00,0,0,0,dh"
             target="_blank"
@@ -58,7 +58,7 @@ export default function Header() {
           </a>
         </div>
       </div>
-      
+
 
       {/* Mobile menu */}
       {menuOpen && (
