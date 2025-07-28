@@ -47,7 +47,7 @@ export default function ServiceCardList() {
         {services.map((service, index) => (
           <div
             key={index}
-            className="bg-blue-50 rounded-2xl p-6 shadow-md h-[240px] relative min-h-[180px] cursor-pointer"
+            className="bg-blue-100 rounded-2xl p-6 shadow-md h-[240px] relative min-h-[180px] cursor-pointer"
             onClick={() => onOpenModal(service)}
           >
             <div className="flex justify-between items-start">

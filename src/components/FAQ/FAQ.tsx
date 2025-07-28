@@ -2,11 +2,13 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
+import Lottie from 'lottie-react';
+import faqAnimation from '@/animations/faq-web-page.json';
 import gsap from 'gsap';
 
 const faqData = [
   {
-    question: 'Q: 매달 나가는 기장료가 부담되는데, 꼭 세무사에게 맡겨야 할까요?',
+    question: 'Q. 매달 나가는 기장료가 부담되는데, 꼭 세무사에게 맡겨야 할까요?',
     answer: (
       <>
         <p className="mb-4">
@@ -41,7 +43,7 @@ const faqData = [
     )
   },
   {
-    question: 'Q: 세무 업무는 국세청이나 세무서 출신 세무사에게 맡기는 게 더 좋은 거 아닌가요?',
+    question: 'Q. 세무 업무는 국세청이나 세무서 출신 세무사에게 맡기는 게 더 좋은 거 아닌가요?',
     answer: (
       <>
         <p className="mb-4">
@@ -69,7 +71,7 @@ const faqData = [
     )
   },
   {
-    question: 'Q: 제가 서울이 아닌 지역에 있는데, 그래도 세무 업무를 맡길 수 있을까요?',
+    question: 'Q. 제가 서울이 아닌 지역에 있는데, 그래도 세무 업무를 맡길 수 있을까요?',
     answer: (
       <>
         <p className="mb-4">
@@ -120,7 +122,12 @@ export default function FAQ() {
 
   return (
     <section className="py-24 px-4 max-w-5xl mx-auto">
-      <h2 className="text-3xl font-bold mb-12">자주 묻는 질문</h2>
+      <div className="flex items-center gap-4 mb-12">
+        <div className="w-16 h-16 md:w-20 md:h-20">
+          <Lottie animationData={faqAnimation} loop={true} />
+        </div>
+        <h2 className="text-3xl font-bold">자주 묻는 질문</h2>
+      </div>
       <ul className="space-y-4">
         {faqData.map((item, index) => (
           <li key={index} className="bg-blue-50 border border-blue-200 rounded-md shadow-md p-4">
