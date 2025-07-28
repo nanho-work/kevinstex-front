@@ -121,7 +121,7 @@ export default function FAQ() {
   }, [openIndex]);
 
   return (
-    <section className="py-24 px-4 max-w-5xl mx-auto">
+    <section className="py-24 px-4 mx-auto">
       <div className="flex items-center gap-4 mb-12">
         <div className="w-16 h-16 md:w-20 md:h-20">
           <Lottie animationData={faqAnimation} loop={true} />

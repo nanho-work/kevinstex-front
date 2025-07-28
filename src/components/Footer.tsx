@@ -13,7 +13,7 @@ export default function Footer() {
 
     {/* 우측 정보 */}
     <div className="mt-6 md:mt-0 text-sm text-right text-gray-600">
-      <p>© 2025 Yongs Dining</p>
+      <p>© 2025 THE KEVIN'S TAX LAB</p>
       <p>
         Website by <a href="#" className="underline">LaonCode</a>
       </p>
