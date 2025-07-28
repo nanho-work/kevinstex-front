@@ -14,25 +14,28 @@ export default function Header() {
 
   return (
     <header className="w-full h-24 bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto h-24 flex items-center justify-between">
+      <div className="mx-auto h-24 flex items-center justify-between">
         {/* 로고 */}
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2 pl-4">
           <img src={`${prefix}/logo.png`} alt="로고" className="w-56 h-40 object-contain" />
         </Link>
 
         {/* 네비게이션 메뉴 (Desktop Only) */}
-        <nav className="hidden md:flex space-x-6 text-lg text-gray-700">
-          <Link href="/about" className={`${pathname === '/customer/about' ? 'text-blue-700 font-bold' : 'text-gray-700'} transition`}>
+        <nav className="hidden md:flex space-x-14 text-lg text-gray-800 font-bold tracking-tight ml-auto">
+          <Link href="/about" className={`${pathname === '/customer/about' ? 'text-blue-700' : ''} transition`}>
             세무사소개
           </Link>
-          <Link href="/service" className={`${pathname === '/customer/service' ? 'text-blue-700 font-bold' : 'text-gray-700'} transition`}>
+          <Link href="/service" className={`${pathname === '/customer/service' ? 'text-blue-700' : ''} transition`}>
             서비스소개
           </Link>
-          <Link href="/blog" className={`${pathname === '/customer/blog' ? 'text-blue-700 font-bold' : 'text-gray-700'} transition`}>
+          <Link href="/blog" className={`${pathname === '/customer/blog' ? 'text-blue-700' : ''} transition`}>
             블로그
           </Link>
-          <Link href="/location" className={`${pathname === '/customer/location' ? 'text-blue-700 font-bold' : 'text-gray-700'} transition`}>
+          <Link href="/location" className={`${pathname === '/customer/location' ? 'text-blue-700' : ''} transition`}>
             오시는길
+          </Link>
+          <Link href="/faq" className={`${pathname === '/customer/faq' ? 'text-blue-700' : ''} transition`}>
+            자주묻는질문
           </Link>
         </nav>
 
@@ -44,7 +47,7 @@ export default function Header() {
         </button>
 
         {/* 상담 버튼 (Desktop) */}
-        <div className="hidden md:flex space-x-2">
+        <div className="hidden md:flex ml-6 pr-4">
           <a
             href="https://map.naver.com/p/entry/place/1166913410?lng=127.1221551&lat=37.4883000&placePath=/home?bookingRedirectUrl=https%3A%2F%2Fm.booking.naver.com%2Fbooking%2F5%2Fbizes%2F1171914&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&area=pll&c=15.00,0,0,0,dh"
             target="_blank"
@@ -70,6 +73,9 @@ export default function Header() {
           </Link>
           <Link href="/location" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/location' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             오시는길
+          </Link>
+          <Link href="/faq" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/faq' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
+            자주묻는질문
           </Link>
         </div>
       )}

@@ -49,14 +49,14 @@ export default function ServiceSlider() {
         >
             {sliderItems.map((item, index) => (
                 <SwiperSlide key={index}>
-                    <div className={`${item.color} rounded-3xl p-6 md:p-10 flex flex-col items-center text-center space-y-6 shadow-md`}>
+                    <div className={`${item.color} rounded-3xl p-6 md:p-10 flex flex-col items-center text-center space-y-6 shadow-md transition-all duration-700 ease-in-out`}>
                         <div className="w-40 h-40 md:w-60 md:h-60">
                             <Lottie animationData={item.animation} loop autoplay />
                         </div>
                         <div>
-                            <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-2">{item.title}</h1>
+                            <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">{item.title}</h1>
                             {item.desc.map((line, i) => (
-                                <p key={i} className="text-sm md:text-lg text-gray-600">{line}</p>
+                                <p key={i} className="text-sm md:text-lg text-gray-700">{line}</p>
                             ))}
                         </div>
                     </div>
