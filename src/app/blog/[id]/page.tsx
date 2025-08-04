@@ -5,12 +5,8 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { samplePosts } from '@/data/blogContents';
 import BlogSidebar from '@/components/blog/BlogSidebar';
-
-interface BlogDetailPageProps {
-    params: {
-        id: string;
-    };
-}
+import type { Metadata, ResolvingMetadata } from 'next';
+import type { PageProps } from '@/types/page';
 
 export async function generateStaticParams() {
     return samplePosts.map((post) => ({
@@ -18,7 +14,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export default function BlogDetailPage({ params }: BlogDetailPageProps) {
+export default async function BlogDetailPage({ params }: PageProps<{ id: string }>) {
     const post = samplePosts.find((p) => p.id === params.id);
 
     if (!post) return notFound();
