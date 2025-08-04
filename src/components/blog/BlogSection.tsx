@@ -9,13 +9,15 @@ export default function BlogSection() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
 
-  const filteredPosts = samplePosts.filter(
-    (post) =>
-      (!selectedCategory || post.category === selectedCategory) &&
-      (!selectedKeyword || (post.keywords || []).includes(selectedKeyword)) &&
-      (post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.summary.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredPosts = samplePosts
+    .filter(
+      (post) =>
+        (!selectedCategory || post.category === selectedCategory) &&
+        (!selectedKeyword || (post.keywords || []).includes(selectedKeyword)) &&
+        (post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.summary.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const filteredKeywords = Array.from(
     new Set(
@@ -36,7 +38,7 @@ export default function BlogSection() {
       </div>
       <div className="flex gap-3 mb-6 text-sm font-medium text-gray-700">
         <button
-          className={`px-4 py-1 border rounded-full ${selectedCategory === null ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
+          className={`px-4 py-1 border rounded-full ${selectedCategory === null ? 'bg-blue-300' : 'hover:bg-gray-100'}`}
           onClick={() => setSelectedCategory(null)}
         >
           전체
@@ -45,7 +47,7 @@ export default function BlogSection() {
           <button
             key={idx}
             className={`px-4 py-1 border rounded-full ${
-              selectedCategory === category ? 'bg-gray-200' : 'hover:bg-gray-100'
+              selectedCategory === category ? 'bg-blue-300' : 'hover:bg-gray-100'
             }`}
             onClick={() => setSelectedCategory(category)}
           >
