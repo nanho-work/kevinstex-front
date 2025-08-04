@@ -1,16 +1,15 @@
 'use client'
 
-import Link from 'next/link'
 
 const prefix = ''
 
 export default function Hero() {
   return (
-    <section className="w-screen bg-gradient-to-l from-blue-300 to-white hero-font">
+    <section className="w-screen bg-gradient-to-l from-blue-200 to-white hero-font">
       <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 items-start gap-10">
         {/* 좌측 문구 */}
         <div className="flex flex-col min-h-[400px] md:h-[500px] justify-center space-y-6 px-6">
-          <p className="text-base text-blue-700 font-sm tracking-wide">세금도 간편하게 톡!</p>
+          <p className="text-base text-blue-600 font-sm tracking-wide">세금도 간편하게 톡!</p>
           <h1 className="text-4xl md:text-7xl font-extrabold leading-tight text-gray-900">
             세금을 그리다<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-blue-400">
