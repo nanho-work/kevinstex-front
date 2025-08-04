@@ -1,4 +1,6 @@
 
+import BlogCardSection from '@/components/blog/BlogSection';
+
 export const metadata = {
   title: '세무 정보 블로그 | 디케빈즈택스랩',
   description: '사업자에게 필요한 최신 세무 정보와 절세 팁을 블로그에서 확인하세요.',
@@ -24,14 +26,7 @@ export const metadata = {
 export default function CustomerBlogPage() {
   return (
     <section className="min-h-screen bg-white px-6">
-      <div className="max-w-5xl mx-auto text-center">
-        <iframe
-          src="https://blog.naver.com/thekevinstaxlab"
-          width="100%"
-          height="800"
-          style={{ border: 'none' }}
-        />
-      </div>
+        <BlogCardSection />
     </section>
   )
 }
