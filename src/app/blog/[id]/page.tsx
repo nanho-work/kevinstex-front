@@ -12,7 +12,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export default async function BlogDetailPage({ params }: any) {
+export default async function BlogDetailPage({ params }: { params: { id: string } }) {
     const post = samplePosts.find((p) => p.id === params.id);
 
     if (!post) return notFound();
