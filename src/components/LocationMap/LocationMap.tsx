@@ -1,6 +1,7 @@
 'use client';
 
 import Script from 'next/script';
+import { useEffect, useState } from 'react';
 
 declare global {
   interface Window {
@@ -9,6 +10,69 @@ declare global {
 }
 
 export default function LocationMap() {
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  // Removed useRouter for App Router compatibility
+
+  // Fallback: If window.kakao.maps exists but scriptLoaded is still false, trigger maps.load
+  useEffect(() => {
+    if (window.kakao?.maps && !scriptLoaded) {
+      window.kakao.maps.load(() => {
+        console.log('[KAKAO] kakao.maps.load triggered from fallback useEffect ✅');
+        setScriptLoaded(true);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!scriptLoaded || !window.kakao?.maps) return;
+
+    const infowindowContent = document.createElement('div');
+    infowindowContent.id = 'infowindow-content';
+    infowindowContent.className = 'font-sans text-[12px] text-left leading-relaxed p-2';
+    infowindowContent.style.display = 'none';
+    infowindowContent.innerHTML = `
+      <div style="padding: 8px; min-width: 200px;">
+        <a href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202508041518&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
+           target="_blank" rel="noopener noreferrer" class="block mb-4">
+          <img src="/logo.png" alt="디 케빈즈 택스랩" class="w-[120px] h-auto mb-1" />
+        </a>
+        <div class="font-bold text-black">디 케빈즈 택스랩</div>
+        <div class="text-gray-500">서울 송파구 송파대로22길 5-20</div>
+        <div class="text-gray-500" style="white-space: nowrap;">(우) 05805 &nbsp; (지번) 문정동 53-13</div>
+      </div>
+    `;
+    document.body.appendChild(infowindowContent);
+
+    const container = document.getElementById('map');
+    const contentEl = document.getElementById('infowindow-content');
+    if (!container || !contentEl) return;
+
+    const options = {
+      center: new window.kakao.maps.LatLng(37.488268, 127.122150),
+      level: 3,
+    };
+    const map = new window.kakao.maps.Map(container, options);
+    const marker = new window.kakao.maps.Marker({
+      position: options.center,
+      map,
+      title: '디 케빈즈 택스랩',
+    });
+    const infowindow = new window.kakao.maps.InfoWindow({
+      content: contentEl.innerHTML,
+    });
+
+    infowindow.open(map, marker);
+    window.kakao.maps.event.addListener(marker, 'click', () => {
+      infowindow.open(map, marker);
+      map.setCenter(options.center);
+    });
+
+    return () => {
+      document.body.removeChild(infowindowContent);
+    };
+  }, [scriptLoaded]);
+
+
   return (
     <>
       <Script
@@ -20,51 +84,16 @@ export default function LocationMap() {
             console.error('[KAKAO] window.kakao.maps not available');
             return;
           }
-
           window.kakao.maps.load(() => {
             console.log('[KAKAO] kakao.maps.load complete ✅');
-            const container = document.getElementById('map');
-            if (!container) {
-              console.error('[KAKAO] #map element not found');
-              return;
-            }
-
-            try {
-              const options = {
-                center: new window.kakao.maps.LatLng(37.488268, 127.122150),
-                level: 3,
-              };
-              const map = new window.kakao.maps.Map(container, options);
-              const marker = new window.kakao.maps.Marker({
-                position: options.center,
-                map,
-                title: '디 케빈즈 택스랩',
-              });
-              const infowindow = new window.kakao.maps.InfoWindow({
-                content: `
-                  <div style="font-family:sans-serif;font-size:12px;text-align:left;padding:8px;line-height:1.6">
-                    <a href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202508041518&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
-                       target="_blank" rel="noopener noreferrer">
-                      <img src="/logo.png" alt="디 케빈즈 택스랩" style="width: 120px; height: auto; margin-bottom: 6px;" />
-                    </a>
-                    <div style="font-weight: bold; color: #000">디 케빈즈 택스랩</div>
-                    <div style="color: #888;">서울 송파구 송파대로22길 5-20</div>
-                    <div style="color: #888;">(우) 05805 &nbsp; (지번) 문정동 53-13</div>
-                  </div>
-                `,
-              });
-              infowindow.open(map, marker);
-              console.log('[KAKAO] map and marker initialized ✅');
-            } catch (err) {
-              console.error('[KAKAO] error during map init:', err);
-            }
+            setScriptLoaded(true);
           });
         }}
       />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[#333] text-sm font-sans p-5 relative">
         {/* 지도 (좌측) */}
         <div className="md:col-span-2">
-          <div id="map" className="min-h-[360px] h-[360px] rounded border border-gray-300" />
+          <div id="map" className="min-h-[360px] h-[360px] rounded border border-gray-300 p-2" />
 
           <div className="bg-[#f9f9f9] border border-black/10 rounded-b px-[11px] py-[7px] mt-1 flex justify-between">
             <a
