@@ -18,7 +18,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export default function BlogDetailPage({ params }: BlogDetailPageProps) {
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     const post = samplePosts.find((p) => p.id === params.id);
 
     if (!post) return notFound();
