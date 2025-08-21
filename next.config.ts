@@ -10,9 +10,6 @@ const nextConfig = {
    images: {
     domains: ['kevintax.s3.ap-northeast-2.amazonaws.com'],
   },
-  experimental: {
-    appDir: true,         // ✅ src/app 쓰는 경우 명시
-  },
   
 };
 

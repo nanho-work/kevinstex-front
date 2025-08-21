@@ -15,9 +15,9 @@ import type { BlogPostResponse } from '@/types/blog';
 //     .map((p) => ({ id: p.slug as string }));
 // }
 
-export default async function BlogDetailPage({ params }: { params: { id?: string } }) {
+export default async function BlogDetailPage({ params }: { params: { id: string } }) {
   // 현재 라우트 폴더가 [id]이므로, params.id를 slug로 사용
-  const slug = params?.id ?? '';
+  const slug = params.id;
 
   let post: BlogPostResponse | null = null;
   try {
@@ -32,11 +32,11 @@ export default async function BlogDetailPage({ params }: { params: { id?: string
   let sidebarList: BlogPostResponse[] = [];
   try {
     const list = await fetchBlogList({ page: 1, page_size: 10 });
-    console.log('sidebar raw list', list);  // ← 실제 내려오는 구조 확인
     sidebarList = Array.isArray(list.items) ? list.items : [];
   } catch {}
 
-  const date = new Date(post.published_at ?? post.created_at).toISOString().split('T')[0];
+  const dateObj = new Date(post.published_at ?? post.created_at);
+  const date = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
   const author = post.author_name || '';
   const subtitle = post.subtitle || '';
   const image = post.thumbnail_url || null;
