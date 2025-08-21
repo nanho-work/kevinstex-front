@@ -45,7 +45,7 @@ export default function BlogCard({
 
   return (
     <Link href={href}>
-      <div className="bg-white rounded-lg shadow hover:shadow-md transition cursor-pointer border">
+      <div className="bg-white rounded-lg shadow hover:shadow-md hover:scale-[1.02] transform transition duration-200 cursor-pointer border">
         <div className="relative w-full h-48">
           {category ? (
             <span
@@ -64,20 +64,20 @@ export default function BlogCard({
           )}
         </div>
 
-        <div className="p-3 bg-neutral-200">
+        <div className="p-3 bg-blue-50">
           <div className="flex justify-between text-sm text-gray-500 mb-1">
             <span>{new Date(date).toLocaleDateString('ko-KR')}</span>
             <span>작성자: {author || ''}</span>
           </div>
 
           <div className="relative group mb-2">
-            <h3 className="text-lg font-semibold line-clamp-1 group-hover:line-clamp-none transition-all">
+            <h3 className="text-lg font-semibold line-clamp-1">
               {title}
             </h3>
           </div>
 
           <div className="relative group">
-            <div className="text-gray-700 text-sm line-clamp-1 group-hover:line-clamp-none transition-all">
+            <div className="text-gray-700 text-sm line-clamp-1">
               <ReactMarkdown>{summary || ''}</ReactMarkdown>
             </div>
           </div>
