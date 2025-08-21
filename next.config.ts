@@ -7,12 +7,13 @@ const nextConfig = {
 
   trailingSlash: false, // 선택사항 (Vercel은 문제 없음)
   assetPrefix: '',       // ❌ 보통 사용 안 함
-  images: {
-    unoptimized: false,  // ❌ Vercel은 이미지 최적화 가능
+   images: {
+    domains: ['kevintax.s3.ap-northeast-2.amazonaws.com'],
   },
   experimental: {
     appDir: true,         // ✅ src/app 쓰는 경우 명시
   },
+  
 };
 
 export default nextConfig;

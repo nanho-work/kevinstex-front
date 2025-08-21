@@ -1,29 +1,97 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import BlogCard from './BlogCard';
-import { samplePosts } from '@/data/blogContents';
+import BlogSidebar from './BlogSidebar';
+import { fetchBlogList } from '@/service/blog';
+import type { BlogPostResponse } from '@/types/blog';
+
+// HTML 태그 제거(요약/검색용)
+const stripHtml = (html: string) =>
+  html
+    ? html
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    : '';
 
 export default function BlogSection() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
 
-  const filteredPosts = samplePosts
-    .filter(
-      (post) =>
-        (!selectedCategory || post.category === selectedCategory) &&
-        (!selectedKeyword || (post.keywords || []).includes(selectedKeyword)) &&
-        (post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.summary.toLowerCase().includes(searchTerm.toLowerCase()))
-    )
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const [items, setItems] = useState<BlogPostResponse[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredKeywords = Array.from(
-    new Set(
-      filteredPosts.flatMap((post) => post.keywords || [])
-    )
-  );
+  // 엔드포인트: 목록 호출
+  useEffect(() => {
+    let ignore = false;
+    (async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchBlogList({ page: 1, page_size: 12, status: 'draft' });
+        if (!ignore) setItems(Array.isArray(data.items) ? data.items : []);
+      } catch (e: any) {
+        if (!ignore) setError(e?.message || '블로그 글을 불러오지 못했습니다.');
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    })();
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const categories = useMemo(() => {
+    const names = items
+      .map((p) => p.category?.name)
+      .filter((n): n is string => typeof n === 'string' && n.length > 0);
+    return Array.from(new Set(names));
+  }, [items]);
+
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const filteredPosts = useMemo(() => {
+    const list = items
+      .filter((post) => {
+        const inCategory = !selectedCategory || post.category?.name === selectedCategory;
+        const inKeyword =
+          !selectedKeyword ||
+          (post.keywords || []).some((k) => (k?.name || '') === selectedKeyword);
+
+        const summarySource =
+          (post as any).summaryHtml ??
+          (post as any).contentHtml ??
+          post.summary ??
+          post.content_md ??
+          '';
+
+        const textForSearch = `${post.title} ${
+          typeof summarySource === 'string' ? stripHtml(summarySource) : ''
+        }`.toLowerCase();
+
+        const inSearch = normalizedSearch.length === 0 || textForSearch.includes(normalizedSearch);
+        return inCategory && inKeyword && inSearch;
+      })
+      .sort((a, b) => {
+        const aDate = (a.published_at ?? a.created_at) || '';
+        const bDate = (b.published_at ?? b.created_at) || '';
+        return new Date(bDate).getTime() - new Date(aDate).getTime();
+      });
+
+    return list;
+  }, [items, normalizedSearch, selectedCategory, selectedKeyword]);
+
+  const filteredKeywords = useMemo(() => {
+    const names = filteredPosts.flatMap((post) => (post.keywords || []).map((k) => k?.name || ''));
+    const filtered = names.filter((n): n is string => typeof n === 'string' && n.length > 0);
+    return Array.from(new Set(filtered));
+  }, [filteredPosts]);
 
   return (
     <section className="py-12 px-4 max-w-7xl mx-auto">
@@ -36,16 +104,19 @@ export default function BlogSection() {
           className="w-full border rounded px-4 py-2"
         />
       </div>
+
       <div className="flex gap-3 mb-6 text-sm font-medium text-gray-700">
         <button
-          className={`px-4 py-1 border rounded-full ${selectedCategory === null ? 'bg-blue-300' : 'hover:bg-gray-100'}`}
+          className={`px-4 py-1 border rounded-full ${
+            selectedCategory === null ? 'bg-blue-300' : 'hover:bg-gray-100'
+          }`}
           onClick={() => setSelectedCategory(null)}
         >
           전체
         </button>
-        {Array.from(new Set(samplePosts.map((post) => post.category))).map((category, idx) => (
+        {categories.map((category) => (
           <button
-            key={idx}
+            key={category}
             className={`px-4 py-1 border rounded-full ${
               selectedCategory === category ? 'bg-blue-300' : 'hover:bg-gray-100'
             }`}
@@ -55,10 +126,11 @@ export default function BlogSection() {
           </button>
         ))}
       </div>
+
       <div className="flex flex-wrap gap-3 mb-6 text-sm text-gray-700">
         {filteredKeywords.map((keyword, idx) => (
           <button
-            key={idx}
+            key={`${keyword}-${idx}`}
             onClick={() => setSelectedKeyword(keyword === selectedKeyword ? null : keyword)}
             className={`px-3 py-1 rounded-full cursor-pointer transition ${
               selectedKeyword === keyword ? 'bg-blue-300 text-white' : 'bg-gray-100 hover:bg-gray-200'
@@ -68,21 +140,41 @@ export default function BlogSection() {
           </button>
         ))}
       </div>
+
+      {loading && <p className="text-gray-500 mb-4">불러오는 중…</p>}
+      {error && <p className="text-red-600 mb-4">{error}</p>}
+
       <div className="grid md:grid-cols-3 gap-8">
-        {filteredPosts.map((post) => (
-          <BlogCard
-            key={post.id}
-            id={post.id}
-            title={post.title}
-            summary={post.summary}
-            image={post.image}
-            date={post.date}
-            author={post.author}
-            keywords={post.keywords}
-            category={post.category}
-          />
-        ))}
+        {filteredPosts.map((post) => {
+          const summarySource =
+            (post as any).summaryHtml ??
+            (post as any).contentHtml ??
+            post.summary ??
+            post.content_md ??
+            '';
+          const plainSummary = typeof summarySource === 'string' ? stripHtml(summarySource) : '';
+
+          return (
+            <BlogCard
+              key={post.id}
+              id={post.id}
+              slug={post.slug}
+              title={post.title}
+              summary={plainSummary} // 카드에서는 HTML 제거된 요약 사용
+              image={post.thumbnail_url || null}
+              date={(post.published_at ?? post.created_at) || post.created_at}
+              author={post.author_name || ''}
+              keywords={(post.keywords || []).map((k) => k?.name || '').filter(Boolean)}
+              category={post.category?.name || ''}
+            />
+          );
+        })}
       </div>
+
+      {/* (선택) 사이드바 같이 쓰는 경우 */}
+      {/* <div className="mt-10">
+        <BlogSidebar postList={items} />
+      </div> */}
     </section>
   );
 }
