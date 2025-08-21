@@ -1,5 +1,6 @@
 // src/app/customer/faq/page.tsx
 import FAQ from '@/components/FAQ/FAQ';
+import ServiceSlider from '@/components/service/ServiceSlider';
 
 export const metadata = {
   title: '자주 묻는 질문 | 디케빈즈택스랩',
@@ -23,5 +24,10 @@ export const metadata = {
 }
 
 export default function FAQPage() {
-  return <FAQ />;
+  return (
+    <div className="w-full max-w-7xl px-4 py-8 space-y-12">
+      <ServiceSlider />
+      <FAQ />
+    </div>
+  );
 }

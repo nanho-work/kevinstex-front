@@ -24,7 +24,7 @@ const sliderItems = [
         animation: animation2,
     },
     {
-        color: 'bg-blue-100',
+        color: 'bg-gray-50',
         title: '처음 시작하는 사업, 어디서부터 어떻게?',
         desc: ['창업 단계부터 함께 케어 해드립니다.', '처음 시작도 걱정 없이 준비하세요.'],
         animation: animation3,
