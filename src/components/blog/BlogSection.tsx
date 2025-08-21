@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import BlogCard from './BlogCard';
-import BlogSidebar from './BlogSidebar';
 import { fetchBlogList } from '@/service/blog';
 import type { BlogPostResponse } from '@/types/blog';
 

@@ -18,10 +18,8 @@ const categoryColors: { [key: string]: string } = {
 interface BlogCardProps {
   id: number | string;
   slug?: string | null;
-
   title: string;
   summary?: string | null;
-
   image?: string | null; // 썸네일 null 허용
   date: string;
   author?: string | null;
