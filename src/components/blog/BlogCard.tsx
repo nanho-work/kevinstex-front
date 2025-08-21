@@ -5,14 +5,14 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 
 const categoryColors: { [key: string]: string } = {
-  '재밌는 세금 이야기': 'bg-yellow-100 text-yellow-800',
-  '세무 정보': 'bg-blue-100 text-blue-800',
-  '법인사업자': 'bg-purple-100 text-purple-800',
-  '개인사업자': 'bg-green-100 text-green-800',
-  '종합소득세': 'bg-pink-100 text-pink-800',
-  '부가가치세': 'bg-indigo-100 text-indigo-800',
-  '연말정산': 'bg-red-100 text-red-800',
-  '부동산': 'bg-gray-100 text-gray-800',
+  '재밌는 세금 이야기': 'bg-yellow-50 text-yellow-800',
+  '세무 정보': 'bg-blue-50 text-blue-800',
+  '법인사업자': 'bg-purple-50 text-purple-800',
+  '개인사업자': 'bg-green-50 text-green-800',
+  '종합소득세': 'bg-pink-50 text-pink-800',
+  '부가가치세': 'bg-indigo-50 text-indigo-800',
+  '연말정산': 'bg-red-50 text-red-800',
+  '부동산': 'bg-gray-50 text-gray-800',
 };
 
 interface BlogCardProps {
@@ -64,7 +64,7 @@ export default function BlogCard({
           )}
         </div>
 
-        <div className="p-3 bg-blue-50">
+        <div className={`p-3 ${categoryColors[category || ''] || 'bg-blue-50'}`}>
           <div className="flex justify-between text-sm text-gray-500 mb-1">
             <span>{new Date(date).toLocaleDateString('ko-KR')}</span>
             <span>작성자: {author || ''}</span>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import BlogCard from './BlogCard';
 import { fetchBlogList } from '@/service/blog';
 import type { BlogPostResponse } from '@/types/blog';
@@ -26,6 +26,10 @@ export default function BlogSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
   // 엔드포인트: 목록 호출
   useEffect(() => {
     let ignore = false;
@@ -33,8 +37,11 @@ export default function BlogSection() {
       try {
         setLoading(true);
         setError(null);
-        const data = await fetchBlogList({ page: 1, page_size: 12, status: 'draft' });
-        if (!ignore) setItems(Array.isArray(data.items) ? data.items : []);
+        const data = await fetchBlogList({ page, page_size: 9, status: 'draft' });
+        if (!ignore) {
+          setItems((prev) => [...prev, ...(Array.isArray(data.items) ? data.items : [])]);
+          if (data.items.length < 9) setHasMore(false);
+        }
       } catch (e: any) {
         if (!ignore) setError(e?.message || '블로그 글을 불러오지 못했습니다.');
       } finally {
@@ -44,7 +51,23 @@ export default function BlogSection() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [page]);
+
+  const lastElementRef = useCallback((node: HTMLDivElement | null) => {
+    if (loading) return;
+
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    if (node && observerRef.current) {
+      observerRef.current.observe(node);
+    }
+  }, [loading, hasMore]);
 
   const categories = useMemo(() => {
     const names = items
@@ -168,6 +191,7 @@ export default function BlogSection() {
             />
           );
         })}
+        <div ref={lastElementRef} />
       </div>
 
       {/* (선택) 사이드바 같이 쓰는 경우 */}
