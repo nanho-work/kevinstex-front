@@ -21,7 +21,7 @@ const truncate = (text: string, maxLength: number) =>
 export default function BlogSidebar({ postList }: { postList: BlogPostResponse[] }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 4;
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
