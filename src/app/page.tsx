@@ -11,13 +11,14 @@ export default function Home() {
   return (
     <main className="bg-white text-gray-900 flex flex-col items-center justify-center">
       <Hero />
+      <div className="w-full max-w-7xl px-4 mb-10">
+        < NewsSection />
+      </div>
 
-      < NewsSection />
-      
       <ReviewSliderSection />
       <div className="w-full max-w-7xl px-4 mb-10">
         <FAQ />
       </div>
-    </main>
+    </main >
   )
 }

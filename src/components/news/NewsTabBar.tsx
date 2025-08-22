@@ -12,7 +12,7 @@ export default function NewsTabBar({ selectedQuery, setSelectedQuery }: NewsTabB
         <button
           key={tab}
           onClick={() => setSelectedQuery(tab)}
-          className={`px-4 py-2 rounded-full border ${
+          className={`min-w-[100px] max-w-[140px] whitespace-nowrap text-center px-4 py-2 rounded-full border ${
             selectedQuery === tab
               ? 'bg-blue-600 text-white'
               : 'bg-white text-gray-800 border-gray-300'
