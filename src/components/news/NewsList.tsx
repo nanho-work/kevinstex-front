@@ -25,7 +25,7 @@ export default function NewsList({ newsItems }: NewsListProps) {
                         {new Date(item.pubDate).toLocaleDateString()}
                     </p>
                     <div
-                        className="text-gray-700 text-sm mt-2 break-words"
+                        className="text-gray-700 text-sm mt-2 break-words line-clamp-2 max-w-4xl"
                         dangerouslySetInnerHTML={{ __html: item.description }}
                     />
                 </li>
