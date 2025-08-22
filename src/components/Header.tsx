@@ -22,19 +22,19 @@ export default function Header() {
 
         {/* 네비게이션 메뉴 (Desktop Only) */}
         <nav className="hidden md:flex space-x-14 text-lg text-gray-800 font-bold tracking-tight ml-auto">
-          <Link href="/about" className={`${pathname === '/customer/about' ? 'text-blue-700' : ''} transition`}>
+          <Link href="/about" className={`${pathname === '/about' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             세무사소개
           </Link>
-          <Link href="/service" className={`${pathname === '/customer/service' ? 'text-blue-700' : ''} transition`}>
+          <Link href="/service" className={`${pathname === '/service' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             서비스소개
           </Link>
-          <Link href="/blog" className={`${pathname === '/customer/blog' ? 'text-blue-700' : ''} transition`}>
+          <Link href="/blog" className={`${pathname === '/blog' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             블로그
           </Link>
-          <Link href="/location" className={`${pathname === '/customer/location' ? 'text-blue-700' : ''} transition`}>
+          <Link href="/location" className={`${pathname === '/location' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             오시는길
           </Link>
-          <Link href="/faq" className={`${pathname === '/customer/faq' ? 'text-blue-700' : ''} transition`}>
+          <Link href="/faq" className={`${pathname === '/faq' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             자주묻는질문
           </Link>
         </nav>
