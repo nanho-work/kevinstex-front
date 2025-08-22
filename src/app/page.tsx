@@ -15,7 +15,7 @@ export default function Home() {
       < NewsSection />
       
       <ReviewSliderSection />
-      <div className="w-full max-w-7xl px-4">
+      <div className="w-full max-w-7xl px-4 mb-10">
         <FAQ />
       </div>
     </main>
