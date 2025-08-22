@@ -25,7 +25,7 @@ export const metadata = {
 
 export default function CustomerBlogPage() {
   return (
-    <section className="min-h-screen bg-white px-6">
+    <section className="min-h-screen bg-white px-6 mb-10">
         <BlogCardSection />
     </section>
   )
