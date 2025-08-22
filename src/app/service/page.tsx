@@ -1,5 +1,6 @@
 import ServiceClient from '@/components/service/ServiceClient'
 
+
 export const metadata = {
   title: '세무 서비스 안내 | 디케빈즈택스랩',
   description: '양도소득세, 종합소득세, 부가가치세, 기장대행 등 다양한 세무 서비스를 확인해보세요.',

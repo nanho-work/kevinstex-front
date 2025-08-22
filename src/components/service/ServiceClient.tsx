@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import ServiceSection from '@/components/service/ServiceSection';
 import ServiceTabBar from '@/components/service/ServiceTabBar';
+import ServiceSlider from '@/components/service/ServiceSlider';
 
 export default function ServiceClient() {
   const [selectedId, setSelectedId] = useState('consulting');
@@ -21,6 +22,7 @@ export default function ServiceClient() {
             아래 항목에서 필요한 서비스를 찾아 자세히 확인해보세요.
           </p>
         </div>
+        <ServiceSlider />
         <ServiceTabBar selectedId={selectedId} setSelectedId={setSelectedId} />
         <ServiceSection selectedId={selectedId} />
       </div>
