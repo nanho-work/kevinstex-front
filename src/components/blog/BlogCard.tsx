@@ -67,7 +67,7 @@ export default function BlogCard({
         <div className={`p-3 ${categoryColors[category || ''] || 'bg-blue-50'}`}>
           <div className="flex justify-between text-sm text-gray-500 mb-1">
             <span>{new Date(date).toLocaleDateString('ko-KR')}</span>
-            <span>작성자: {author || ''}</span>
+            <span>{author || ''} 세무사</span>
           </div>
 
           <div className="relative group mb-2">
