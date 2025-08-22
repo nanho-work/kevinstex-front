@@ -22,7 +22,7 @@ export default async function BlogDetailPage(props: { params: Promise<{ id: stri
   try {
     const list = await fetchBlogList({ page: 1, page_size: 10 });
     sidebarList = Array.isArray(list.items) ? list.items : [];
-  } catch {}
+  } catch { }
 
   return (
     <div className="flex flex-col md:flex-row max-w-7xl mx-auto px-4 py-12">
@@ -30,7 +30,7 @@ export default async function BlogDetailPage(props: { params: Promise<{ id: stri
         <BlogDetailContent post={post} />
       </main>
 
-      <aside className="w-full md:w-72  p-4 fixed right-4 top-24 mr-20">
+      <aside className="hidden md:block w-full md:w-72 p-4 fixed right-4 top-24 mr-20">
         <BlogSidebar postList={sidebarList} />
       </aside>
     </div>

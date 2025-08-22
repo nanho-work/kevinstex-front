@@ -120,9 +120,14 @@ export default function BlogSection() {
       <div className="mb-4 md:flex md:items-end md:justify-between md:gap-6">
         <div>
           <h1 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">Blog</h1>
-          <p className="text-lg text-gray-700 mt-2">
-            The Kevin’s Tax Lab 블로그입니다. <span className="text-sm text-gray-600 ml-2">현직 세무 전문가가 알려주는 실무 중심의 세금 정보.</span>
-          </p>
+          <div className="mt-2">
+            <p className="text-lg text-gray-700 flex flex-wrap items-center">
+              The Kevin’s Tax Lab 블로그입니다.
+              <span className=" text-sm text-gray-600 whitespace-nowrap">
+                현직 세무 전문가가 알려주는 실무 중심의 세금 정보.
+              </span>
+            </p>
+          </div>
         </div>
         <div className="mt-4 md:mt-0">
           <input
@@ -135,7 +140,7 @@ export default function BlogSection() {
         </div>
       </div>
 
-      <div className="flex gap-3 mb-4 text-sm font-medium text-gray-700">
+      <div className="flex gap-3 mb-4 text-sm pb-3 font-medium text-gray-700 overflow-x-auto whitespace-nowrap">
         <button
           className={`px-4 py-1 border rounded-full ${
             selectedCategory === null ? 'bg-blue-300' : 'hover:bg-gray-100'
@@ -157,7 +162,7 @@ export default function BlogSection() {
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-6 text-sm text-gray-700">
+      <div className="hidden sm:flex flex-wrap gap-3 mb-6 text-sm text-gray-700">
         {filteredKeywords.map((keyword, idx) => (
           <button
             key={`${keyword}-${idx}`}
