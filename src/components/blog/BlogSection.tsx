@@ -116,18 +116,26 @@ export default function BlogSection() {
   }, [filteredPosts]);
 
   return (
-    <section className="py-12 px-4 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="검색어를 입력하세요..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full border rounded px-4 py-2"
-        />
+    <section className="max-w-screen-xl mx-auto">
+      <div className="mb-4 md:flex md:items-end md:justify-between md:gap-6">
+        <div>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">Blog</h1>
+          <p className="text-lg text-gray-700 mt-2">
+            The Kevin’s Tax Lab 블로그입니다. <span className="text-sm text-gray-600 ml-2">현직 세무 전문가가 알려주는 실무 중심의 세금 정보.</span>
+          </p>
+        </div>
+        <div className="mt-4 md:mt-0">
+          <input
+            type="text"
+            placeholder="검색어를 입력하세요..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full max-w-xs border rounded px-4 py-2"
+          />
+        </div>
       </div>
 
-      <div className="flex gap-3 mb-6 text-sm font-medium text-gray-700">
+      <div className="flex gap-3 mb-4 text-sm font-medium text-gray-700">
         <button
           className={`px-4 py-1 border rounded-full ${
             selectedCategory === null ? 'bg-blue-300' : 'hover:bg-gray-100'
