@@ -122,7 +122,7 @@ export default function BlogSection() {
           <h1 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">Blog</h1>
           <div className="mt-2">
             <p className="text-lg text-gray-700 flex flex-wrap items-center">
-              The Kevin’s Tax Lab 블로그입니다.
+              THE KEVIN’s TAX LAB 블로그입니다.
               <span className=" text-sm text-gray-600 whitespace-nowrap">
                 현직 세무 전문가가 알려주는 실무 중심의 세금 정보.
               </span>

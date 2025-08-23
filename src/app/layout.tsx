@@ -52,7 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen flex flex-col bg-white text-gray-800 ">
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col min-h-screen">
           <Header />
-          <main className="flex-grow pt-16">{children}</main>
+          <main className="flex-grow pt-4">{children}</main>
           <FloatingButton />
         </div>
 
