@@ -179,7 +179,7 @@ export default function BlogSection() {
       {loading && <p className="text-gray-500 mb-4">불러오는 중…</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-16">
         {filteredPosts.map((post) => {
           const summarySource =
             (post as any).summaryHtml ??

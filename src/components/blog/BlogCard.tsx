@@ -45,7 +45,7 @@ export default function BlogCard({
 
   return (
     <Link href={href}>
-      <div className="bg-white rounded-lg shadow hover:shadow-md hover:scale-[1.02] transform transition duration-200 cursor-pointer border">
+      <div className="rounded-lg shadow hover:shadow-md hover:scale-[1.02] transform transition duration-200 cursor-pointer border">
         <div className="relative w-full h-48">
           {category ? (
             <span
@@ -64,7 +64,7 @@ export default function BlogCard({
           )}
         </div>
 
-        <div className={`p-3 ${categoryColors[category || ''] || 'bg-blue-50'}`}>
+        <div className="p-3">
           <div className="flex justify-between text-sm text-gray-500 mb-1">
             <span>{new Date(date).toLocaleDateString('ko-KR')}</span>
             <span>{author || ''} 세무사</span>
