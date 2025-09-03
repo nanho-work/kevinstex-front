@@ -93,7 +93,7 @@ export default function LocationMap() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[#333] text-sm font-sans p-5 relative">
         {/* 지도 (좌측) */}
         <div className="md:col-span-2">
-          <div id="map" className="min-h-[360px] h-[360px] rounded border border-gray-300 p-2" />
+          <div id="map" className="min-h-[360px] h-[450px] rounded border border-gray-300 p-2" />
 
           <div className="bg-[#f9f9f9] border border-black/10 rounded-b px-[11px] py-[7px] mt-1 flex justify-between">
             <a
