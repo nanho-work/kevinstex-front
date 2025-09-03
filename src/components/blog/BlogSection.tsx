@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import BlogCard from './BlogCard';
-import { fetchBlogList } from '@/service/blog';
+import { fetchBlogList, fetchBlogCategories } from '@/service/blog';
 import type { BlogPostResponse } from '@/types/blog';
 
 // HTML 태그 제거(요약/검색용)
@@ -29,6 +29,20 @@ export default function BlogSection() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const [categoryList, setCategoryList] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await fetchBlogCategories();
+        const names = (data || []).map((cat) => cat.name).filter((n): n is string => typeof n === 'string' && n.length > 0);
+        setCategoryList(names);
+      } catch (err) {
+        console.error('카테고리 목록 로드 실패', err);
+      }
+    })();
+  }, []);
 
   // 엔드포인트: 목록 호출
   useEffect(() => {
@@ -69,12 +83,13 @@ export default function BlogSection() {
     }
   }, [loading, hasMore]);
 
-  const categories = useMemo(() => {
-    const names = items
-      .map((p) => p.category?.name)
-      .filter((n): n is string => typeof n === 'string' && n.length > 0);
-    return Array.from(new Set(names));
-  }, [items]);
+  // const categories = useMemo(() => {
+  //   const names = items
+  //     .map((p) => p.category?.name)
+  //     .filter((n): n is string => typeof n === 'string' && n.length > 0);
+  //   return Array.from(new Set(names));
+  // }, [items]);
+  const categories = categoryList;
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
 
