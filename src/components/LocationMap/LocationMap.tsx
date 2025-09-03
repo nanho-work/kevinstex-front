@@ -48,7 +48,7 @@ export default function LocationMap() {
     if (!container || !contentEl) return;
 
     const options = {
-      center: new window.kakao.maps.LatLng(37.488268, 127.122150),
+      center: new window.kakao.maps.LatLng(37.4882834285316, 127.122189149996),
       level: 3,
     };
     const map = new window.kakao.maps.Map(container, options);
