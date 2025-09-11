@@ -23,7 +23,7 @@ export default function SolutionFrame({ className }: SolutionFrameProps) {
 
   return (
     <div className={`max-w-xl mx-auto mt-10 ${className ?? ''}`}>
-      <h1 className="text-5xl font-bold text-center mb-2">
+      <h1 className="text-2xl font-bold text-center mb-2">
         <span className="text-blue-600 font-bold">사업자 유형</span>을 선택해 주세요
       </h1>
       <p className="text-center text-gray-500 text-base mb-6">
