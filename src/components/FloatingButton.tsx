@@ -3,8 +3,15 @@
 import Link from 'next/link';
 import { FaCommentDots, FaYoutube, FaArrowUp } from 'react-icons/fa';
 import { PenLine } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 export default function FloatingButton() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith('/solution')) {
+    return null;
+  }
+
   return (
     <div className="fixed bottom-6 right-0 z-50 flex flex-col items-center bg-[#F9FAFB]/20 rounded-l-xl shadow-lg overflow-hidden border border-[#D1D5DB]">
 

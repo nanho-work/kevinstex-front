@@ -35,7 +35,7 @@ export default function SolutionFrame({ className }: SolutionFrameProps) {
           className="w-full border-4 border-blue-500 rounded-lg p-6 flex items-center justify-between hover:bg-blue-50 transition-colors"
         >
           <div className="flex items-center space-x-4">
-            <span className="w-12 h-12 bg-blue-500 rounded-md flex items-center justify-center text-white text-3xl">🏢</span>
+            <img src="/office.png" alt="법인사업자 아이콘" className="w-12 h-12" />
             <span className="text-blue-600 font-bold text-2xl">법인사업자</span>
           </div>
           <span className="text-blue-500 text-2xl font-bold">{'❯❯'}</span>
@@ -45,8 +45,8 @@ export default function SolutionFrame({ className }: SolutionFrameProps) {
           className="w-full border-4 border-blue-500 rounded-lg p-6 flex items-center justify-between hover:bg-blue-50 transition-colors"
         >
           <div className="flex items-center space-x-4">
-            <span className="w-12 h-12 bg-blue-500 rounded-md flex items-center justify-center text-white text-3xl">👤</span>
-            <span className="text-green-600 font-bold text-2xl">개인사업자</span>
+            <img src="/employer.png" alt="개인사업자 아이콘" className="w-12 h-12" />
+            <span className="text-blue-500 font-bold text-2xl">개인사업자</span>
           </div>
           <span className="text-blue-500 text-2xl font-bold">{'❯❯'}</span>
         </button>
