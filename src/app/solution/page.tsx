@@ -15,9 +15,9 @@ export default function SolutionPage() {
             </h1>
             <SolutionFrame className="mb-10" />
 
-            <p className="mb-6 text-gray-700 text-4xl text-center">
+            <p className="mb-6 text-gray-700 text-3xl text-center leading-loose">
                 화면 전환 후  <br />
-                신청번호 :<span className="font-mono text-blue-700 font-bold"> 17777</span>
+                신청번호 :<span className="font-mono text-blue-600 font-bold"> 17777</span>
             </p>
         </main>
     );
