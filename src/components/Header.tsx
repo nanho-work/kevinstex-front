@@ -29,9 +29,9 @@ export default function Header() {
           <Link href="/service" className={`${pathname === '/service' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             서비스소개
           </Link>
-          <Link href="/correction" className={`${pathname === '/correction' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
+          {/* <Link href="/correction" className={`${pathname === '/correction' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             경정청구
-          </Link>
+          </Link> */}
           <Link href="/blog" className={`${pathname === '/blog' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             블로그
           </Link>
@@ -81,9 +81,9 @@ export default function Header() {
           <Link href="/service" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/service' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             서비스소개
           </Link>
-          <Link href="/correction" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/correction' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
+          {/* <Link href="/correction" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/correction' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             경정청구
-          </Link>
+          </Link> */}
           <Link href="/blog" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/blog' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             블로그
           </Link>

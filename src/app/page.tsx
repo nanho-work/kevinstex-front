@@ -10,7 +10,7 @@ import NewsSection from '@/components/news/NewsSection';
 export default function Home() {
   return (
     <main className="bg-white text-gray-900 flex flex-col items-center justify-center">
-      <div className="w-full max-w-8xl px-4 mb-10">
+      <div className="w-full mb-10">
         <Hero />
       </div>
       
