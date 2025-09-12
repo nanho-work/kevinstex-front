@@ -12,7 +12,7 @@ export const services: ServiceList[] = [
     id: 'consulting',
     title: '세무 상담 패키지',
     subtitle: '전문 세무사와 1:1로 진행하는 맞춤형 세무 상담',
-    image: '/images/consulting.jpg',
+    image: 'https://kevintax.s3.ap-northeast-2.amazonaws.com/services/consulting.jpg',
     content: `
 ### 세무 상담 패키지
 
@@ -44,7 +44,7 @@ export const services: ServiceList[] = [
     id: 'startup',
     title: '창업 및 법인 전환 지원',
     subtitle: '안정적인 기업 출발, 믿을 수 있는 세무 파트너와 함께하세요',
-    image: '/images/startup.jpg',
+    image: 'https://kevintax.s3.ap-northeast-2.amazonaws.com/services/startup.jpg',
     content: `
 ### 창업 및 법인 전환 지원
 
@@ -84,7 +84,7 @@ export const services: ServiceList[] = [
     id: 'bookkeeping',
     title: '기장 및 절세 대리 서비스',
     subtitle: '정확한 장부 정리와 세금 절세 전략을 원스톱으로 지원합니다',
-    image: '/images/bookkeeping.jpg',
+    image: 'https://kevintax.s3.ap-northeast-2.amazonaws.com/services/bookkeeping.jpg',
     content: `
 ### 기장 및 절세 대리 서비스
 
@@ -125,7 +125,7 @@ export const services: ServiceList[] = [
     id: 'tax-filing',
     title: '세금 신고 서비스',
     subtitle: '누락 없이, 정확하게 처리하는 책임 세무 신고',
-    image: '/images/tax-filing.jpg',
+    image: 'https://kevintax.s3.ap-northeast-2.amazonaws.com/services/tax-filing.jpg',
     content: `
 ### 세금 신고 서비스
 
@@ -166,7 +166,7 @@ export const services: ServiceList[] = [
     id: 'management-consulting',
     title: '경영 상담 서비스',
     subtitle: '의사결정에 도움이 되는 현실적 해답을 드립니다',
-    image: '/images/management-consulting.jpg',
+    image: 'https://kevintax.s3.ap-northeast-2.amazonaws.com/services/055ca8fc5ba046fc99f110cbbe30c258.jpg',
     content: `
 ### 경영 상담 서비스
 

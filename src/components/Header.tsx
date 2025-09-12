@@ -4,6 +4,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import Button from './ui/Button'
 
 const prefix = ''
 
@@ -28,6 +29,9 @@ export default function Header() {
           <Link href="/service" className={`${pathname === '/service' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             서비스소개
           </Link>
+          <Link href="/correction" className={`${pathname === '/correction' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
+            경정청구
+          </Link>
           <Link href="/blog" className={`${pathname === '/blog' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             블로그
           </Link>
@@ -47,15 +51,23 @@ export default function Header() {
         </button>
 
         {/* 상담 버튼 (Desktop) */}
-        <div className="hidden md:flex ml-24 pr-4">
-          <a
-            href="https://map.naver.com/p/entry/place/1166913410?lng=127.1221551&lat=37.4883000&placePath=/home?bookingRedirectUrl=https%3A%2F%2Fm.booking.naver.com%2Fbooking%2F5%2Fbizes%2F1171914&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&theme=place&entry=pll&lang=ko&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507101558&locale=ko&svcName=map_pcv5&area=pll&c=15.00,0,0,0,dh"
+        <div className="hidden md:flex ml-24 pr-4 space-x-4">
+          <Button
+            href="https://map.naver.com/p/entry/place/1166913410..."
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-1.5 text-sm rounded border font-bold border-gray-300 text-gray-700 hover:bg-gray-100"
+            variant="outline"
           >
-            상담 신청하기
-          </a>
+            상담신청
+          </Button>
+          <Button
+            href="/solution"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="outline"
+          >
+            세급환급조회
+          </Button>
         </div>
       </div>
 
@@ -68,6 +80,9 @@ export default function Header() {
           </Link>
           <Link href="/service" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/service' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             서비스소개
+          </Link>
+          <Link href="/correction" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/correction' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
+            경정청구
           </Link>
           <Link href="/blog" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/customer/blog' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             블로그
