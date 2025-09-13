@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 function StepCard({ step, title, description, icon }: { step: string; title: string; description: string; icon: string }) {
     return (
-        <div className="bg-blue-50 rounded-lg w-full h-auto md:w-72 md:h-72 p-4 shadow-md border-2 border-blue-400">
+        <div className="bg-blue-50 rounded-lg w-full h-72 md:w-72 md:h-72 p-4 shadow-md border-2 border-blue-400">
             <div className="bg-white rounded-lg w-full h-full p-1">
                 <div className="bg-blue-50 rounded-lg p-6 w-full h-full text-center">
                     <p className="text-purple-600 text-lg mb-2">{step}</p>
@@ -43,7 +43,7 @@ export default function ProcessSection() {
             ease: "power3.out",
             scrollTrigger: {
                 trigger: sectionRef.current,
-                start: "top 90%",
+                start: "top 100%",
             }
         })
     }, [])
@@ -97,7 +97,7 @@ export default function ProcessSection() {
 
             {/* // 모바일버전 */}
             <div className="block md:hidden">
-                <div className="grid grid-cols-2 gap-4 mt-10">
+                <div className="grid grid-cols-2 gap-3 mt-10">
                     {steps.map((stepObj, index) => (
                         <div key={index} ref={el => { if (el) cardsRef.current[index + 6] = el }}>
                             <StepCard {...stepObj} />
