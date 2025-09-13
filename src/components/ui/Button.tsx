@@ -5,7 +5,7 @@ import React from 'react'
 
 interface ButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode
-  variant?: 'default' | 'outline' | 'primary'
+  variant?: 'default' | 'outline' | 'primary'| 'white'
 }
 
 export default function Button({ children, variant = 'default', className = '', ...props }: ButtonProps) {
@@ -14,7 +14,8 @@ export default function Button({ children, variant = 'default', className = '', 
   const variants = {
     default: 'bg-blue-600 text-white hover:bg-blue-700',
     outline: 'border border-blue-600 text-blue-700 hover:bg-blue-200',
-    primary: 'border border-blue-600 text-blue-600 hover:bg-blue-100'
+    primary: 'border border-blue-600 text-blue-600 hover:bg-blue-100',
+    white: 'bg-transparent border border-white text-white hover:bg-white hover:text-blue-600',
   }
 
   return (

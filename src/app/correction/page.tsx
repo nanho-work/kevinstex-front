@@ -16,8 +16,8 @@ export default function CorrectionPage() {
       <ExplanationSection />
       <ProcessSection />
       <BenefitsSection />
-      <SocialProofSection />
-      <TrustSection />
+      {/* <SocialProofSection /> */}
+      {/* <TrustSection /> */}
       <CTASection />
       <FAQSection />
     </main>
