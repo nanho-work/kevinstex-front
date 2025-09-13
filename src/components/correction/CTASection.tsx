@@ -7,7 +7,7 @@ export default function CTASection() {
             <div className="flex items-center justify-center space-x-4">
                 {/* 카카오톡 상담 */}
                 <a
-                    href="https://pf.kakao.com/_xgxlxjxb"
+                    href="https://pf.kakao.com/_qJhkn/chat"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block px-6 py-3 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-300 transition animate-pulse border border-black"
