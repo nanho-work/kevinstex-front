@@ -21,12 +21,12 @@ export default function Header() {
           <img
             src={`${prefix}/logo.png`}
             alt="로고"
-            className="w-32 h-20 md:w-40 md:h-28 lg:w-56 lg:h-40 object-contain"
+            className="w-28 h-16 md:w-36 md:h-24 lg:w-48 lg:h-32 object-contain"
           />
         </Link>
 
         {/* 네비게이션 메뉴 (Desktop Only) */}
-        <nav className="hidden md:flex space-x-8 md:space-x-10 lg:space-x-14 text-sm md:text-base lg:text-lg text-gray-800 font-bold tracking-tight ml-auto">
+        <nav className="hidden md:flex space-x-8 md:space-x-10 lg:space-x-14 text-sm md:text-sm lg:text-base text-gray-800 font-bold tracking-tight ml-auto">
           <Link href="/about" className={`${pathname === '/about' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             세무사소개
           </Link>
@@ -61,7 +61,7 @@ export default function Header() {
             target="_blank"
             rel="noopener noreferrer"
             variant="outline"
-            className="px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base lg:px-6 lg:py-3 lg:text-lg"
+            className="px-2 py-1 text-sm md:px-3 md:py-1.5 md:text-sm lg:px-4 lg:py-2 lg:text-base"
           >
             상담신청
           </Button>
@@ -70,7 +70,7 @@ export default function Header() {
             target="_blank"
             rel="noopener noreferrer"
             variant="outline"
-            className="px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base lg:px-6 lg:py-3 lg:text-lg"
+            className="px-2 py-1 text-sm md:px-3 md:py-1.5 md:text-sm lg:px-4 lg:py-2 lg:text-base"
           >
             세급환급조회
           </Button>
