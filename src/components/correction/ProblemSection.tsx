@@ -53,7 +53,7 @@ export default function ProblemSection() {
                     경정청구가 가능합니다.
                 </h2>
                 <p className="text-gray-700 mb-8 text-center">
-                    사업자·개인이 놓치기 쉬운 환급 사례 (예: 부가세, 종소세 누락)
+                    사업자·개인이 놓치기 쉬운 환급 사례 (예: 부가세, 법인세, 종소세 누락)
                 </p>
 
                 <div className="grid md:grid-cols-10 gap-8 items-center">
