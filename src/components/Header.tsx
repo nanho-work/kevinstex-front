@@ -21,7 +21,7 @@ export default function Header() {
           <img
             src={`${prefix}/logo.png`}
             alt="로고"
-            className="w-28 h-16 md:w-36 md:h-24 lg:w-48 lg:h-32 object-contain"
+            className="w-40 h-20 md:w-36 md:h-24 lg:w-48 lg:h-32 object-contain"
           />
         </Link>
 
