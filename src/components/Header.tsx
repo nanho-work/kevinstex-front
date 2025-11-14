@@ -63,16 +63,16 @@ export default function Header() {
             variant="outline"
             className="px-2 py-1 text-sm md:px-3 md:py-1.5 md:text-sm lg:px-4 lg:py-2 lg:text-base"
           >
-            상담신청
+            바로예약
           </Button>
           <Button
-            href="/solution"
+            href="https://pf.kakao.com/_qJhkn/chat"
             target="_blank"
             rel="noopener noreferrer"
             variant="outline"
             className="px-2 py-1 text-sm md:px-3 md:py-1.5 md:text-sm lg:px-4 lg:py-2 lg:text-base"
           >
-            세급환급조회
+            카카오상담
           </Button>
         </div>
       </div>
