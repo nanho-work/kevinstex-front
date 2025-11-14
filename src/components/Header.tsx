@@ -33,9 +33,9 @@ export default function Header() {
           <Link href="/service" className={`${pathname === '/service' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             서비스소개
           </Link>
-          <Link href="/correction" className={`${pathname === '/correction' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
+          {/* <Link href="/correction" className={`${pathname === '/correction' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             경정청구
-          </Link>
+          </Link> */}
           <Link href="/blog" className={`${pathname === '/blog' ? 'text-blue-700 bg-blue-50 rounded px-2 py-1' : ''} transition`}>
             블로그
           </Link>
