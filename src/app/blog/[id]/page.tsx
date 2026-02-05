@@ -30,7 +30,7 @@ export default async function BlogDetailPage(props: { params: Promise<{ id: stri
         <BlogDetailContent post={post} />
       </main>
 
-      <aside className="hidden md:block w-full md:w-72 p-4 fixed right-4 top-24 mr-20">
+      <aside className="hidden xl:block w-full md:w-72 p-4 fixed right-4 top-24 mr-20">
         <BlogSidebar postList={sidebarList} />
       </aside>
     </div>
