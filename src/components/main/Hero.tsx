@@ -6,7 +6,8 @@ const prefix = ''
 export default function Hero() {
   return (
     <section
-      className="w-full  hero-font bg-gradient-to-r from-white to-blue-300 rounded-md bg-cover bg-center sm:min-h-[500px] md:min-h-[596px] "
+      className="w-full hero-font rounded-md bg-cover bg-center sm:min-h-[500px] md:min-h-[596px]"
+      style={{ backgroundImage: "url(/main6.png)" }}
     >
       <div className="mx-auto grid md:grid-cols-2 items-center gap-10 py-10">
         {/* 좌측 문구 */}
@@ -15,7 +16,8 @@ export default function Hero() {
           <h1 className="text-4xl md:text-7xl font-extrabold leading-tight text-gray-900">
             세금을 그리다<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-800 to-blue-400">
-              THE KEVIN's TAX LAB
+              THE KEVIN's <br/>
+              TAX LAB
             </span>
           </h1>
           <p className="text-gray-600 text-lg max-w-md">
@@ -31,15 +33,7 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* 우측 이미지 */}
-        <div className="hidden md:flex relative h-[400px] md:h-[500px] w-full items-end top-14 justify-start">
-          <img
-            src={`/main4.png`}
-            alt="권도윤 송파세무사 | 디케빈즈택스랩, 케빈즈택스의 권도윤세무사가 세금과 세무를 책임집니다."
-            className="w-full h-full object-cover"
-          />
-          
-        </div>
+        <div className="hidden md:block" />
       </div>
     </section>
   )
