@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import FloatingButton from '@/components/FloatingButton'
 import Footer from '@/components/Footer'
+import Script from 'next/script'
 
 const prefix = ''
 
@@ -48,6 +49,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-PPYLQMYSQ0"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-PPYLQMYSQ0');
+          `}
+        </Script>
       </head>
       <body className="min-h-screen flex flex-col bg-white text-gray-800 ">
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col min-h-screen">
