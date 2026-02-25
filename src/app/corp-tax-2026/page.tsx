@@ -25,7 +25,45 @@ function TableSection({
         <h2 className="text-lg sm:text-xl font-bold text-gray-900">{title}</h2>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white">
+      {/* Mobile: card list */}
+      <div className="sm:hidden space-y-3">
+        {rows.map((r) => (
+          <div
+            key={`${r.doc}-${r.issuer}`}
+            className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+          >
+            <p className="text-sm font-semibold text-gray-900 leading-snug">
+              {(() => {
+                const parts = r.doc.split('(')
+                if (parts.length === 1) return r.doc
+                return (
+                  <>
+                    {parts[0].trim()}
+                    <span className="block sm:inline text-gray-500">
+                      {'(' + parts.slice(1).join('(')}
+                    </span>
+                  </>
+                )
+              })()}
+            </p>
+
+            <div className="mt-3 grid grid-cols-1 gap-2 text-sm">
+              <div className="flex gap-2">
+                <span className="w-12 flex-shrink-0 text-xs font-semibold text-gray-500">발급처</span>
+                <span className="text-gray-800">{r.issuer}</span>
+              </div>
+
+              <div className="flex gap-2">
+                <span className="w-12 flex-shrink-0 text-xs font-semibold text-gray-500">비고</span>
+                <span className="text-gray-700 whitespace-pre-line">{r.note ?? ''}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop/Tablet: table */}
+      <div className="hidden sm:block overflow-x-auto rounded-lg border border-gray-300 bg-white">
         <table className="min-w-[720px] w-full border-collapse text-sm">
           <thead>
             <tr className="bg-sky-200/70">
@@ -43,9 +81,22 @@ function TableSection({
           <tbody>
             {rows.map((r) => (
               <tr key={`${r.doc}-${r.issuer}`} className="align-top">
-                <td className="border border-gray-300 px-3 py-2 text-gray-900">{r.doc}</td>
+                <td className="border border-gray-300 px-3 py-2 text-gray-900">
+                  {(() => {
+                    const parts = r.doc.split('(')
+                    if (parts.length === 1) return r.doc
+                    return (
+                      <>
+                        {parts[0].trim()}
+                        <span className="block sm:inline text-gray-500">
+                          {'(' + parts.slice(1).join('(')}
+                        </span>
+                      </>
+                    )
+                  })()}
+                </td>
                 <td className="border border-gray-300 px-3 py-2 text-gray-900">{r.issuer}</td>
-                <td className="border border-gray-300 px-3 py-2 text-gray-700">
+                <td className="border border-gray-300 px-3 py-2 text-gray-700 whitespace-pre-line">
                   {r.note ?? ''}
                 </td>
               </tr>
@@ -167,61 +218,63 @@ export default function CorpTax2026Page() {
 
   return (
     <section className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-      <div className="rounded-2xl bg-white border border-gray-200 p-6 sm:p-10">
-        {/* Title */}
-        <div className="flex items-start justify-between gap-6">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900">
-              2026년 귀속 법인세 신고 제출자료 안내
-            </h1>
+      <div className="rounded-2xl bg-gray-50/60 border border-gray-200 p-4 sm:p-6 lg:p-8 shadow-sm">
+        <div className="rounded-2xl bg-white border border-gray-200 p-6 sm:p-10">
+          {/* Title */}
+          <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900">
+                2026년 귀속 법인세 신고 제출자료 안내
+              </h1>
 
-            <div className="mt-5">
-              <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                <span className="inline-flex items-center justify-center rounded bg-red-600 text-white text-xs px-2 py-0.5">
-                  31
-                </span>
-                <span>법인세 신고 및 납부 기한: {schedule.taxPeriod}</span>
+              <div className="mt-5">
+                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                  <span className="inline-flex items-center justify-center rounded bg-red-600 text-white text-xs px-2 py-0.5">
+                    31
+                  </span>
+                  <span>법인세 신고 및 납부 기한: {schedule.taxPeriod}</span>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-orange-500 text-white text-xs">
+                    ✦
+                  </span>
+                  <span>업무 일정</span>
+                </div>
+                <ul className="mt-3 space-y-2 text-sm text-gray-800">
+                  <li>• 자료 수집 기한 : {schedule.collectBy}</li>
+                  <li>• 법인 결산 기간: {schedule.closing}</li>
+                  <li>• 법인 세무조정 및 신고서 작성 기간: {schedule.adjust}</li>
+                  <li className="text-red-600 font-medium">• {schedule.notice}</li>
+                </ul>
               </div>
             </div>
 
-            <div className="mt-6">
-              <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-orange-500 text-white text-xs">
-                  ✦
-                </span>
-                <span>업무 일정</span>
+            <div className="hidden sm:block">
+              <div className="rounded-xl border border-gray-200 bg-gray-50 px-5 py-4">
+                <p className="text-xs font-semibold text-gray-700">THE KEVIN&apos;S TAX LAB</p>
+                <p className="mt-1 text-xs text-gray-500">제출자료 안내</p>
               </div>
-              <ul className="mt-3 space-y-2 text-sm text-gray-800">
-                <li>• 자료 수집 기한 : {schedule.collectBy}</li>
-                <li>• 법인 결산 기간: {schedule.closing}</li>
-                <li>• 법인 세무조정 및 신고서 작성 기간: {schedule.adjust}</li>
-                <li className="text-red-600 font-medium">• {schedule.notice}</li>
-              </ul>
             </div>
           </div>
 
-          <div className="hidden sm:block">
-            <div className="rounded-xl border border-gray-200 bg-gray-50 px-5 py-4">
-              <p className="text-xs font-semibold text-gray-700">THE KEVIN&apos;S TAX LAB</p>
-              <p className="mt-1 text-xs text-gray-500">제출자료 안내</p>
+          <div className="mt-10 border-t pt-10">
+            <h2 className="text-xl font-extrabold text-gray-900">제출 서류 목록</h2>
+
+            <div className="mt-6 space-y-10">
+              <TableSection index={1} title="법인 기본서류" rows={sec1} />
+              <TableSection index={2} title="금융 및 보험" rows={sec2} />
+              <TableSection index={3} title="법인 채권/채무 및 재고자산 및 유형자산" rows={sec3} />
+              <TableSection index={4} title="업무용 차량 관련" rows={sec4} />
+              <TableSection index={5} title="기타 증빙" rows={sec5} />
             </div>
-          </div>
-        </div>
 
-        <div className="mt-10 border-t pt-10">
-          <h2 className="text-xl font-extrabold text-gray-900">제출 서류 목록</h2>
-
-          <div className="mt-6 space-y-10">
-            <TableSection index={1} title="법인 기본서류" rows={sec1} />
-            <TableSection index={2} title="금융 및 보험" rows={sec2} />
-            <TableSection index={3} title="법인 채권/채무 및 재고자산 및 유형자산" rows={sec3} />
-            <TableSection index={4} title="업무용 차량 관련" rows={sec4} />
-            <TableSection index={5} title="기타 증빙" rows={sec5} />
-          </div>
-
-          <div className="mt-10 space-y-2 text-sm text-gray-800">
-            <p>✦ 원활한 신고 진행을 위해 자료를 기한 내 제출하여 주시기 바랍니다.</p>
-            <p>✦ 추가 문의 사항이 있으실 경우 별도 연락 주시기 바랍니다.</p>
+            <div className="mt-10 space-y-2 text-sm text-gray-800">
+              <p>✦ 원활한 신고 진행을 위해 자료를 기한 내 제출하여 주시기 바랍니다.</p>
+              <p>✦ 추가 문의 사항이 있으실 경우 별도 연락 주시기 바랍니다.</p>
+            </div>
           </div>
         </div>
       </div>
