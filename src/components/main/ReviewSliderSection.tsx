@@ -18,13 +18,17 @@ export default function ReviewSliderSection() {
     ]
 
     return (
-        <section className="py-16 px-4 bg-white">
-            <div className="max-w-7xl mx-auto px-4 py-4 text-center text-xs text-gray-400">
-                <h2 className="text-xl md:text-2xl font-bold text-blue-900 mb-6">실제 고객 후기</h2>
+        <section className="py-16 bg-white">
+            <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="mb-8 text-center">
+                  <p className="text-xs tracking-widest text-gray-400 bg-gray-100 inline-block px-2 py-1 rounded">REVIEW</p>
+                  <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-gray-900">실제 고객 후기</h2>
+                  <p className="mt-3 text-sm sm:text-base text-gray-600">디케빈즈택스랩 이용 고객의 실제 후기입니다.</p>
+                </div>
                 <Swiper
                     modules={[Autoplay]}
-                    spaceBetween={16}
-                    loop={reviews.length > 4}
+                    spaceBetween={20}
+                    loop={reviews.length > 5}
                     autoplay={{
                         delay: 2000,
                         disableOnInteraction: false,
@@ -36,27 +40,27 @@ export default function ReviewSliderSection() {
                         640: { slidesPerView: 1.5 },
                         768: { slidesPerView: 2.2 },
                         1024: { slidesPerView: 3 },
-                        1280: { slidesPerView: 4 },
+                        1280: { slidesPerView: 5 },
                     }}
                     className="pb-2"
                 >
                     {reviews.map((r) => (
                         <SwiperSlide
                             key={r.id}
-                            className="w-full max-w-xs sm:max-w-sm md:max-w-md min-w-0 bg-white border border-blue-400 rounded-xl shadow p-4 h-full flex-shrink-0"
+                            className="w-full min-w-0 bg-white border border-gray-200 rounded-xl p-6 h-full hover:border-gray-300 transition"
                         >
                             <div className="flex flex-col justify-between h-full min-h-[180px] max-h-[240px] md:max-h-[280px] overflow-hidden">
                                 <div>
-                                    <div className="text-sm md:text-base text-blue-700 font-semibold mb-1">{r.customer_name}</div>
+                                    <div className="text-sm md:text-base text-gray-900 font-semibold mb-2">{r.customer_name}</div>
                                     <div className="flex justify-center">
-                                        <p className="text-sm md:text-base text-gray-700 mb-2 leading-relaxed break-words text-center max-w-[22ch]">
+                                        <p className="text-sm md:text-base text-gray-600 mb-2 leading-relaxed break-words text-center max-w-[34ch]">
                                             "{r.comment}"
                                         </p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-end justify-end mt-auto">
-                                    <div className="text-xs text-gray-500 mb-1">{r.category} | {r.created_at}</div>
-                                    <div className="text-yellow-400 text-sm md:text-base">
+                                    <div className="text-xs text-gray-400 mb-2">{r.category} | {r.created_at}</div>
+                                    <div className="text-gray-400 text-sm md:text-base tracking-wide">
                                         {"★".repeat(r.rating)}
                                     </div>
                                 </div>
