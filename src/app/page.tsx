@@ -13,14 +13,14 @@ export default function Home() {
       </section>
 
       {/* Reviews */}
-      <section className="w-full py-16 sm:py-10 border-b border-gray-100">
+      <section className="w-full  sm:py-10 border-b border-gray-100">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <ReviewSliderSection />
         </div>
       </section>
 
       {/* FAQ + News */}
-      <section className="w-full bg-gray-50 py-16 sm:py-10 border-b border-gray-100">
+      <section className="w-full bg-gray-50  sm:py-10 border-b border-gray-100">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>

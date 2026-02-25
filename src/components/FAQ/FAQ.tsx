@@ -138,7 +138,9 @@ export default function FAQ() {
         {faqData.map((item, index) => (
           <li
             key={index}
-            className={`bg-white border rounded-xl p-6 transition ${openIndex === index ? 'border-gray-400' : 'border-gray-200 hover:border-gray-300'}`}
+            className={`bg-white border rounded-xl p-6 transition shadow-sm ${
+              openIndex === index ? 'border-gray-400' : 'border-gray-300 hover:border-gray-400'
+            }`}
           >
             <button
               onClick={() => toggle(index)}

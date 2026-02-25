@@ -90,7 +90,7 @@ export default function LocationMap() {
           });
         }}
       />
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-[#333] text-sm font-sans p-5 relative">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-[#333] text-sm font-sans px-4 sm:px-6 lg:px-8 py-5 relative">
         {/* 지도 (좌측) */}
         <div className="md:col-span-3">
           <div id="map" className="min-h-[360px] h-[450px] rounded border border-gray-300" />
@@ -142,10 +142,13 @@ export default function LocationMap() {
         </div>
 
         {/* 안내 정보 (우측) */}
-        <div className="md:col-span-2 bg-white rounded border border-gray-200 p-6 leading-relaxed h-full">
+        <div className="md:col-span-2 bg-white rounded border border-gray-200 p-4 sm:p-5 md:p-6 leading-relaxed h-full">
           <p className="text-xs tracking-widest text-gray-400 bg-gray-100 inline-block px-2 py-1 rounded mb-2">LOCATION</p>
           <h2 className="text-base font-semibold text-gray-900 mb-4">주소</h2>
-          <p>서울 송파구 송파대로22길 5-20, 1층 101호</p>
+          <p>
+            서울 송파구 송파대로22길 5-20,<br />
+            1층 101호
+          </p>
 
           <h2 className="text-base font-semibold text-gray-900 mt-6 mb-2">지하철 이용 시</h2>
           <ul className="space-y-1">
