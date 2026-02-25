@@ -31,7 +31,7 @@ export default function LocationMap() {
     infowindowContent.className = 'font-sans text-[12px] text-left leading-relaxed p-2';
     infowindowContent.style.display = 'none';
     infowindowContent.innerHTML = `
-      <div style="padding: 8px; min-width: 200px;">
+      <div style="padding: 8px; min-width: 260px;">
         <a href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202508041518&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
            target="_blank" rel="noopener noreferrer" class="block mb-4">
           <img src="/logo.png" alt="디 케빈즈 택스랩" class="w-[120px] h-auto mb-1" />
@@ -90,10 +90,10 @@ export default function LocationMap() {
           });
         }}
       />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[#333] text-sm font-sans p-5 relative">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-[#333] text-sm font-sans p-5 relative">
         {/* 지도 (좌측) */}
-        <div className="md:col-span-2">
-          <div id="map" className="min-h-[360px] h-[450px] rounded border border-gray-300 p-2" />
+        <div className="md:col-span-3">
+          <div id="map" className="min-h-[360px] h-[450px] rounded border border-gray-300" />
 
           <div className="bg-[#f9f9f9] border border-black/10 rounded-b px-[11px] py-[7px] mt-1 flex justify-between">
             <a
@@ -142,24 +142,23 @@ export default function LocationMap() {
         </div>
 
         {/* 안내 정보 (우측) */}
-        <div className="md:col-span-1 bg-white rounded shadow p-5 leading-relaxed h-full">
-          <h2 className="text-base font-bold text-blue-700 mb-2">📍 주소</h2>
+        <div className="md:col-span-2 bg-white rounded border border-gray-200 p-6 leading-relaxed h-full">
+          <p className="text-xs tracking-widest text-gray-400 bg-gray-100 inline-block px-2 py-1 rounded mb-2">LOCATION</p>
+          <h2 className="text-base font-semibold text-gray-900 mb-4">주소</h2>
           <p>서울 송파구 송파대로22길 5-20, 1층 101호</p>
 
-          <h2 className="text-base font-bold text-blue-700 mt-5 mb-2">🚇 지하철 이용 시</h2>
-          <p>문정역 1번 출구에서 도보 약 3분 (약 213m)</p>
+          <h2 className="text-base font-semibold text-gray-900 mt-6 mb-2">지하철 이용 시</h2>
+          <ul className="space-y-1">
+            <li>문정역 1번 출구 기준 도보 약 3분 (약 213m)</li>
+            <li>1번 출구 → 약 100m 직진</li>
+            <li>첫 골목 우회전 → 약 50m 이동</li>
+            <li>송파대로22길 좌회전 → 약 100m 직진</li>
+          </ul>
 
-          <h2 className="text-base font-bold text-blue-700 mt-5 mb-2">🕒 영업시간</h2>
+          <h2 className="text-base font-semibold text-gray-900 mt-6 mb-2">영업시간</h2>
           <p>
             평일: 10:00 ~ 17:00<br />
             토/일/공휴일: 휴무
-          </p>
-
-          <h2 className="text-base font-bold text-blue-700 mt-5 mb-2">🗺️ 찾아오시는 길</h2>
-          <p>
-            문정역 1번 출구에서 나와 약 100m 직진 후 첫 골목에서 우회전합니다.<br />
-            약 50m 걷다 송파대로 22길로 다시 좌회전하여 100m 정도 직진하면 도착입니다.<br />
-            전체 도보 시간은 약 3분입니다.
           </p>
 
           <div className="mt-5 text-right">
@@ -167,7 +166,7 @@ export default function LocationMap() {
               href="https://map.kakao.com/link/to/THE KEVIN'S TAX LAB,37.488268,127.122150"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-700 text-sm underline"
+              className="text-gray-700 text-sm underline hover:text-gray-900"
               aria-label="카카오맵 길찾기 바로가기"
             >
               길찾기 바로가기

@@ -46,7 +46,7 @@ export default function BlogCard({
   return (
     <Link href={href}>
       <div className="rounded-lg shadow hover:shadow-md hover:scale-[1.02] transform transition duration-200 cursor-pointer border">
-        <div className="relative w-full h-48">
+        <div className="relative w-full h-96">
           {category ? (
             <span
               className={`absolute top-2 left-2 z-10 text-xs font-semibold px-2 py-0.5 rounded-full ${
