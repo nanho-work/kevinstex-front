@@ -1,30 +1,37 @@
 // src/app/page.tsx
-import './globals.css';
-
 import Hero from '@/components/main/Hero'
 import ReviewSliderSection from '@/components/main/ReviewSliderSection'
-import FAQ from '@/components/FAQ/FAQ';
-import NewsSection from '@/components/news/NewsSection';
-
+import FAQ from '@/components/FAQ/FAQ'
+import NewsSection from '@/components/news/NewsSection'
 
 export default function Home() {
   return (
-    <main className="bg-white text-gray-900 flex flex-col items-center justify-center">
-      <div className="w-full mb-10">
+    <main className="bg-white text-gray-900">
+      {/* Hero */}
+      <section className="w-full">
         <Hero />
-      </div>
-      
-      <div className="w-full max-w-8xl px-4 mb-10">
-        <FAQ />
-      </div>
-      <div className="w-full max-w-8xl px-4 mb-10 border-b border-gray-100">
-        <ReviewSliderSection />
-      </div>
-      <div className="w-full max-w-8xl px-4 mb-2">
-        < NewsSection />
-      </div>
-      
-      
-    </main >
+      </section>
+
+      {/* Reviews */}
+      <section className="w-full py-16 sm:py-20 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ReviewSliderSection />
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="w-full bg-gray-50 py-16 sm:py-20 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <FAQ />
+        </div>
+      </section>
+
+      {/* News */}
+      <section className="w-full bg-white py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <NewsSection />
+        </div>
+      </section>
+    </main>
   )
 }

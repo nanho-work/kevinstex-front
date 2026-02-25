@@ -15,7 +15,7 @@ const faqData = [
           업종별 연매출이 일정 기준 이하인 경우에는 간편장부 대상자로서 직접 세무 신고를 해보는 것도 한 가지 방법입니다.<br />
           예를 들어, 도소매업은 3억 원 미만, 제조업은 1억5천만 원 미만, <br />서비스업은 7,500만 원 미만일 경우 간편장부 대상자가 될 수 있습니다.
           (자세한 기준은{' '}
-          <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2230&cntntsId=7669" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+          <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2230&cntntsId=7669" target="_blank" rel="noopener noreferrer" className="text-gray-700 underline hover:text-gray-900">
             국세청 안내 페이지
           </a>
           에서 확인하실 수 있습니다)
@@ -121,28 +121,44 @@ export default function FAQ() {
   }, [openIndex]);
 
   return (
-    <section className="px-4 mx-auto">
-      <div className="flex items-center gap-4 mb-12">
-        <div className="w-16 h-16 md:w-20 md:h-20">
-          <Lottie animationData={faqAnimation} loop={true} />
+    <section className="w-full">
+      <div className="mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="w-14 h-14 md:w-16 md:h-16 flex-shrink-0">
+            <Lottie animationData={faqAnimation} loop={true} />
+          </div>
+          <div>
+            <p className="text-xs tracking-widest text-gray-400 bg-gray-100 inline-block px-2 py-1 rounded">FAQ</p>
+            <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-gray-900">자주 묻는 질문</h2>
+            <p className="mt-2 text-sm sm:text-base text-gray-600">상담 전 자주 문의하시는 내용을 정리했습니다.</p>
+          </div>
         </div>
-        <h2 className="text-3xl font-bold">자주 묻는 질문</h2>
       </div>
-      <ul className="space-y-4">
+      <ul className="space-y-5">
         {faqData.map((item, index) => (
-          <li key={index} className="bg-blue-50 border border-blue-200 rounded-md shadow-md p-4">
+          <li
+            key={index}
+            className={`bg-white border rounded-xl p-6 transition ${openIndex === index ? 'border-gray-400' : 'border-gray-200 hover:border-gray-300'}`}
+          >
             <button
               onClick={() => toggle(index)}
-              className="flex items-center justify-between w-full text-left font-semibold text-lg mb-1 bg-blue-100 rounded-md px-3 py-2"
+              className="flex items-start justify-between w-full text-left font-semibold px-1 py-1"
             >
-              <span className="text-base md:text-lg">{item.question}</span>
-              <span className={`transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}>
-                ▼
+              <span className="text-base md:text-lg text-gray-900 leading-snug">{item.question}</span>
+              <span
+                className={`ml-4 mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white transition-transform duration-300 ${
+                  openIndex === index ? 'rotate-180 text-gray-700' : 'text-gray-500'
+                }`}
+                aria-hidden
+              >
+                <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </span>
             </button>
             <div
               ref={(el) => (answerRefs.current[index] = el)}
-              className="overflow-hidden text-gray-700 text-base md:text-lg leading-loose pl-[1.25em] space-y-4 "
+              className="overflow-hidden text-gray-700 text-sm sm:text-base leading-relaxed mt-6 pt-5 border-t border-gray-100 space-y-4"
               style={{ height: openIndex === index ? 'auto' : 0 }}
             >
               {openIndex === index && item.answer}

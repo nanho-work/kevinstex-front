@@ -9,7 +9,7 @@ export default function Hero() {
       className="w-full hero-font rounded-md bg-cover bg-center sm:min-h-[500px] md:min-h-[596px]"
       style={{ backgroundImage: "url(/main6.png)" }}
     >
-      <div className="mx-auto grid md:grid-cols-2 items-center gap-10 py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 items-center gap-10 py-12">
         {/* 좌측 문구 */}
         <div className="flex flex-col min-h-[400px] md:h-[500px] justify-center space-y-6">
           <p className="text-base text-blue-600 font-sm tracking-wide">세금도 간편하게 톡!</p>
