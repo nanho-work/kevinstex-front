@@ -150,7 +150,21 @@ export default function BlogSection() {
             placeholder="검색어를 입력하세요..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full max-w-xs border rounded px-4 py-2"
+            className={`
+              w-full max-w-xs
+              bg-gray-50
+              border border-gray-400
+              rounded-lg
+              px-4 py-2.5
+              text-sm
+              text-gray-900
+              placeholder:text-gray-500
+              focus:outline-none
+              focus:ring-2 focus:ring-blue-800/20
+              focus:border-blue-800
+              transition
+              ${searchTerm.length === 0 ? 'animate-pulse' : ''}
+            `}
           />
         </div>
       </div>

@@ -28,7 +28,7 @@ export default function NewsSection() {
   }, [selectedTopic]);
 
   return (
-    <section className="py-16 bg-white">
+  <section className="bg-white">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 섹션 헤더 */}
         <div className="mb-10">

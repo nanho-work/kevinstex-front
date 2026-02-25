@@ -19,7 +19,7 @@ export default function ReviewSliderSection() {
 
     return (
         <section className="py-16 bg-white">
-            <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-8 text-center">
                   <p className="text-xs tracking-widest text-gray-400 bg-gray-100 inline-block px-2 py-1 rounded">REVIEW</p>
                   <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-gray-900">실제 고객 후기</h2>

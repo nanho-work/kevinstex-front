@@ -11,7 +11,7 @@ interface NewsListProps {
 
 export default function NewsList({ newsItems }: NewsListProps) {
   return (
-    <ul className="space-y-6">
+    <ul className="space-y-1">
       {newsItems.map((item, index) => (
         <li
           key={index}
@@ -31,11 +31,21 @@ export default function NewsList({ newsItems }: NewsListProps) {
             dangerouslySetInnerHTML={{ __html: item.title }}
           />
 
-          {/* 설명 */}
-          <div
-            className="text-gray-600 text-sm mt-3 line-clamp-3 leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: item.description }}
-          />
+          {/* 설명 (펼치기/접기) */}
+          <details className="mt-3 group">
+            <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-900 transition">
+              미리보기 펼치기
+            </summary>
+
+            <div
+              className="text-gray-600 text-sm mt-3 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: item.description }}
+            />
+
+            <div className="mt-2 text-xs text-gray-400 group-open:hidden">
+              내용 확인하려면 클릭하세요
+            </div>
+          </details>
 
           {/* 날짜 + 출처 */}
           <div className="mt-4 flex justify-between items-center text-xs text-gray-400">
