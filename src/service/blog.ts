@@ -47,7 +47,14 @@ export async function fetchBlogBySlug(slug: string): Promise<BlogPostResponse> {
 
 /** (선택) 카테고리 목록 — 필터 UI에 필요하면 사용 */
 export async function fetchBlogCategories(): Promise<
-  { id: number; name: string; slug: string; created_at: string; updated_at: string }[]
+  {
+    id: number
+    name: string
+    slug: string
+    created_at: string
+    updated_at: string
+    post_count: number
+  }[]
 > {
   const url = `${BASE_URL}/blog/categories`;
   const res = await fetch(url, { headers: { Accept: 'application/json' }, cache: 'no-store' });

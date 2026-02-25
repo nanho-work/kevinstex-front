@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import BlogCard from './BlogCard';
 import { fetchBlogList, fetchBlogCategories } from '@/service/blog';
-import type { BlogPostResponse } from '@/types/blog';
+import type { BlogPostResponse, BlogCategoryResponse } from '@/types/blog';
 
 // HTML 태그 제거(요약/검색용)
 const stripHtml = (html: string) =>
@@ -30,14 +30,16 @@ export default function BlogSection() {
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const [categoryList, setCategoryList] = useState<string[]>([]);
+  const [categoryList, setCategoryList] = useState<BlogCategoryResponse[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
         const data = await fetchBlogCategories();
-        const names = (data || []).map((cat) => cat.name).filter((n): n is string => typeof n === 'string' && n.length > 0);
-        setCategoryList(names);
+        const list = (data || [])
+          .filter((cat) => typeof cat?.name === 'string' && (cat.name || '').length > 0)
+          .map((cat) => ({ ...cat, name: (cat.name as string).trim(), post_count: Number(cat.post_count || 0) }))
+        setCategoryList(list)
       } catch (err) {
         console.error('카테고리 목록 로드 실패', err);
       }
@@ -83,15 +85,13 @@ export default function BlogSection() {
     }
   }, [loading, hasMore]);
 
-  // const categories = useMemo(() => {
-  //   const names = items
-  //     .map((p) => p.category?.name)
-  //     .filter((n): n is string => typeof n === 'string' && n.length > 0);
-  //   return Array.from(new Set(names));
-  // }, [items]);
   const categories = categoryList;
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const totalCount = useMemo(() => {
+    return categories.reduce((acc, c) => acc + Number(c.post_count || 0), 0)
+  }, [categories])
 
   const filteredPosts = useMemo(() => {
     const list = items
@@ -155,24 +155,30 @@ export default function BlogSection() {
         </div>
       </div>
 
-      <div className="flex gap-3 mb-4 text-sm pb-3 font-medium text-gray-700 overflow-x-auto whitespace-nowrap">
+      <div className="flex gap-6 mb-8 text-sm font-medium overflow-x-auto whitespace-nowrap border-b border-gray-200">
         <button
-          className={`px-4 py-1 border rounded-full ${
-            selectedCategory === null ? 'bg-blue-300' : 'hover:bg-gray-100'
+          className={`pb-3 transition border-b-2 ${
+            selectedCategory === null
+              ? 'border-blue-800 text-blue-900'
+              : 'border-transparent text-gray-500 hover:text-gray-900'
           }`}
           onClick={() => setSelectedCategory(null)}
         >
-          전체
+          <span>전체</span>
+          <span className="ml-2 text-xs text-gray-400">{totalCount}</span>
         </button>
-        {categories.map((category) => (
+        {categories.map((cat) => (
           <button
-            key={category}
-            className={`px-4 py-1 border rounded-full ${
-              selectedCategory === category ? 'bg-blue-300' : 'hover:bg-gray-100'
+            key={cat.id}
+            className={`pb-3 transition border-b-2 ${
+              selectedCategory === cat.name
+                ? 'border-blue-800 text-blue-900'
+                : 'border-transparent text-gray-500 hover:text-gray-900'
             }`}
-            onClick={() => setSelectedCategory(category)}
+            onClick={() => setSelectedCategory(cat.name)}
           >
-            {category}
+            <span>{cat.name}</span>
+            <span className="ml-2 text-xs text-gray-400">{cat.post_count ?? 0}</span>
           </button>
         ))}
       </div>

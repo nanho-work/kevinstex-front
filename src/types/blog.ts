@@ -6,8 +6,9 @@ export interface BlogCategoryResponse {
   id: number;
   name: string | null;
   slug: string;
-  created_at: string;  // datetime → string
+  created_at: string; // datetime → string
   updated_at: string;
+  post_count: number;
 }
 
 // 키워드(태그)
