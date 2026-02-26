@@ -19,6 +19,7 @@ export default function IndustryCodeLookup() {
 
   const [code, setCode] = useState('')
   const [submittedCode, setSubmittedCode] = useState<string>('')
+  const [open, setOpen] = useState(false)
 
   const normalized = useMemo(() => normalizeIndustryCode(code), [code])
 
@@ -35,20 +36,28 @@ export default function IndustryCodeLookup() {
   const onSearch = () => {
     const c = normalizeIndustryCode(code)
     setSubmittedCode(c)
+    // 조회 시 결과 영역을 펼침(있으면 펼쳐서 보여주고, 없으면 아래 안내 문구만 보이도록)
+    setOpen(true)
+  }
+
+  const onReset = () => {
+    setCode('')
+    setSubmittedCode('')
+    setOpen(false)
   }
 
   const ui = {
-    panel: { border: '1px solid #e5e7eb', borderRadius: 12, padding: 14, background: '#fff' } as const,
+    panel: { border: '1px solid #d1d5db', borderRadius: 12, padding: 14, background: '#fff' } as const,
     title: { fontSize: 14, fontWeight: 900, marginBottom: 10 } as const,
     row: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' } as const,
     input: { padding: 10, border: '1px solid #d1d5db', borderRadius: 10, width: 240 } as const,
     btn: { padding: '9px 12px', border: '1px solid #d1d5db', borderRadius: 10, background: '#fff', cursor: 'pointer', fontWeight: 800 } as const,
     hint: { fontSize: 12, color: '#6b7280', marginTop: 8, lineHeight: 1.5 } as const,
     table: { width: '100%', borderCollapse: 'collapse' as const, marginTop: 12 } as const,
-    th: { textAlign: 'left' as const, fontSize: 12, color: '#6b7280', padding: '8px 6px', borderBottom: '1px solid #e5e7eb' } as const,
-    tdK: { fontSize: 13, fontWeight: 800, padding: '8px 6px', borderBottom: '1px solid #f1f5f9', width: 160 } as const,
-    tdV: { fontSize: 13, padding: '8px 6px', borderBottom: '1px solid #f1f5f9' } as const,
-    badge: { display: 'inline-block', padding: '4px 8px', borderRadius: 999, background: '#f3f4f6', fontSize: 12, fontWeight: 900 } as const,
+    th: { textAlign: 'left' as const, fontSize: 12, color: '#6b7280', padding: '8px 6px', borderBottom: '1px solid #d1d5db' } as const,
+    tdK: { fontSize: 13, fontWeight: 800, padding: '8px 6px', borderBottom: '1px solid #e5e7eb', width: 160 } as const,
+    tdV: { fontSize: 13, padding: '8px 6px', borderBottom: '1px solid #e5e7eb' } as const,
+    badge: { display: 'inline-block', padding: '4px 8px', borderRadius: 999, background: '#e5e7eb', fontSize: 12, fontWeight: 900 } as const,
     ok: { color: '#065f46', fontWeight: 900 } as const,
     no: { color: '#991b1b', fontWeight: 900 } as const,
   }
@@ -67,8 +76,24 @@ export default function IndustryCodeLookup() {
           placeholder="업종코드 입력 (예: 701101)"
           style={ui.input}
           inputMode="numeric"
+          onFocus={() => {
+            // 입력할 때 결과 영역이 펼쳐져 있으면 불편하니 자동 접기
+            if (submittedCode) setOpen(false)
+          }}
         />
         <button onClick={onSearch} style={ui.btn}>조회</button>
+
+        {submittedCode ? (
+          <button
+            onClick={() => setOpen((v) => !v)}
+            style={ui.btn}
+            title="조회 결과 접기/펼치기"
+          >
+            {open ? '접기' : '펼치기'}
+          </button>
+        ) : null}
+
+        <button onClick={onReset} style={ui.btn} title="입력/조회 초기화">초기화</button>
 
         <span style={ui.badge}>정규화: {normalized || '-'}</span>
 
@@ -82,13 +107,13 @@ export default function IndustryCodeLookup() {
         - 경비율은 JSON에서 <b>0~1 비율</b>로 저장됨 (예: 0.935 → 93.5%)
       </div>
 
-      {submittedCode && !found && (
+      {open && submittedCode && !found && (
         <div style={{ ...ui.hint, marginTop: 12 }}>
           입력한 업종코드(<b>{submittedCode}</b>)에 해당하는 항목을 찾지 못했습니다.
         </div>
       )}
 
-      {found && summary && (
+      {open && found && summary && (
         <table style={ui.table}>
           <thead>
             <tr>
