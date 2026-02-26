@@ -1,9 +1,9 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function ConsultToolAuthPage() {
+function AuthInner() {
   const router = useRouter()
   const sp = useSearchParams()
   const nextPath = useMemo(() => sp.get('next') || '/consult-tool', [sp])
@@ -72,5 +72,19 @@ export default function ConsultToolAuthPage() {
 
       {error && <div style={{ marginTop: 10, color: '#d00', fontSize: 12 }}>{error}</div>}
     </div>
+  )
+}
+
+export default function ConsultToolAuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ maxWidth: 420, margin: '0 auto', padding: 24, fontSize: 12, color: '#666' }}>
+          로딩중...
+        </div>
+      }
+    >
+      <AuthInner />
+    </Suspense>
   )
 }
