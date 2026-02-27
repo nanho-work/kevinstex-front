@@ -10,11 +10,26 @@ const menus = [
   { label: '직원관리', href: '/client/employees' },
 ]
 
-export default function ClientSidebar() {
+type ClientSidebarProps = {
+  isOpen: boolean
+  onToggle: () => void
+}
+
+export default function ClientSidebar({ isOpen, onToggle }: ClientSidebarProps) {
   const pathname = usePathname()
 
   return (
     <div className="flex h-[calc(100vh-80px)] flex-col">
+      {/* 토글 버튼 */}
+      <div className="flex items-center justify-end px-3 py-2">
+        <button
+          onClick={onToggle}
+          className="rounded-md px-2 py-1 text-xs text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+        >
+          {isOpen ? '<<' : '>>'}
+        </button>
+      </div>
+
       {/* 사업장 정보 */}
       <div className="border-b border-neutral-200 px-5 py-6">
         <p className="text-xs text-neutral-500">로그인 사업장</p>
