@@ -22,6 +22,14 @@ export default function Company_Document_Actions({ doc }: Props) {
     // 같은 파일 재선택 가능하도록 value 초기화
     e.target.value = ''
     if (!file) return
+
+    // 10MB 제한 (서버 413 방지)
+    const MAX_SIZE = 10 * 1024 * 1024 // 10MB
+    if (file.size > MAX_SIZE) {
+      alert('파일 용량이 너무 큽니다. 10MB 이하 파일만 업로드 가능합니다.')
+      return
+    }
+
     await doc.upload(file)
   }
 

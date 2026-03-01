@@ -11,15 +11,9 @@ export default function Company_Document_Preview({ doc }: Props) {
   const isPdf = companyDocUtils.isPdfFileName(fileName)
 
   return (
-    <div className="flex h-full flex-col rounded-xl border border-neutral-200 bg-white shadow-sm">
-      <div className="border-b border-neutral-200 px-5 py-4">
-        <div className="text-sm font-semibold text-neutral-900">사업자등록증</div>
-        <div className="mt-1 text-xs text-neutral-500">
-          {fileName ? fileName : '등록된 문서가 없습니다.'}
-        </div>
-      </div>
+    <div className="flex flex-col rounded-xl border border-neutral-200 bg-white shadow-sm">
 
-      <div className="relative flex-1 bg-neutral-50">
+      <div className="relative flex-1 min-h-[520px] bg-neutral-50 overflow-hidden">
         {status === 'loading' && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-sm text-neutral-500">불러오는 중...</p>
@@ -42,7 +36,11 @@ export default function Company_Document_Preview({ doc }: Props) {
         {status === 'ready' && previewUrl && (
           <div className="h-full w-full">
             {isPdf ? (
-              <iframe title="business-license-preview" src={previewUrl} className="h-full w-full" />
+              <iframe
+                title="business-license-preview"
+                src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0&zoom=page-width`}
+                className="h-full w-full"
+              />
             ) : (
               // 이미지면 img로
               // (pdf 외 타입은 img로 시도)
