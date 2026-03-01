@@ -38,6 +38,53 @@ export interface CompanyChangePasswordResponse {
   message: string
 }
 
+// 2-1️⃣ 회사 문서(사업자등록증 등)
+export interface CompanyDocumentType {
+  id: number
+  code: string
+  name: string
+  description?: string | null
+  is_unique_per_company: boolean
+  is_active: boolean
+  created_at: string // datetime
+  updated_at: string // datetime
+}
+
+export interface CompanyDocument {
+  id: number
+  company_id: number
+  doc_type_id: number
+
+  // 조인해서 내려줄 때(선택)
+  doc_type_code?: string | null
+  doc_type_name?: string | null
+
+  file_key: string
+  file_name: string
+  content_type: string
+  file_size: number
+  is_active: boolean
+  uploaded_at: string // datetime
+  deleted_at?: string | null
+
+  // 프라이빗 문서 미리보기 URL(선택)
+  preview_url?: string | null
+}
+
+export interface CompanyDocumentListResponse {
+  total: number
+  items: CompanyDocument[]
+}
+
+export interface CompanyDocumentPreviewResponse {
+  file_name: string
+  preview_url: string
+}
+
+export interface CompanyDocumentDeleteResponse {
+  message: string
+}
+
 // 3️⃣ 약관
 export interface ConsentTerm {
   id: number;

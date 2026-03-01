@@ -1,53 +1,42 @@
 import type { CompanySession } from '@/types/company'
 import CompanyProfileField from './CompanyProfileField'
 
+import Company_Document_Preview from './Company_Document_Preview'
+import Company_Document_Actions from './Company_Document_Actions'
+import { useCompanyBusinessLicenseDocument } from './Company_Document_State'
+
 type Props = {
   session: CompanySession | null
 }
 
 export default function CompanyProfileCard({ session }: Props) {
+  const doc = useCompanyBusinessLicenseDocument()
+
   return (
     <div className="rounded-xl border border-neutral-200 bg-white shadow-sm">
       <div className="grid grid-cols-1 gap-6 px-6 py-6 md:grid-cols-2">
-        <CompanyProfileField
-          label="회사명"
-          value={session?.company_name}
-        />
+        {/* LEFT: 회사정보 (기존 그대로) */}
+        <div className="rounded-xl border border-neutral-200 bg-white p-5">
+          <div className="grid grid-cols-1 gap-6">
+            <CompanyProfileField label="회사명" value={session?.company_name} />
+            <CompanyProfileField label="사업자등록번호" value={session?.registration_number} />
+            <CompanyProfileField label="대표자명" value={session?.owner_name} />
+            <CompanyProfileField label="업태" value={session?.industry_type} />
+            <CompanyProfileField label="종목" value={session?.business_type} />
+            <CompanyProfileField label="우편번호" value={session?.postal_code} />
+            <CompanyProfileField
+              label="사업장 주소"
+              value={session ? `${session.address1 ?? ''} ${session.address2 ?? ''}` : undefined}
+            />
+          </div>
+        </div>
 
-        <CompanyProfileField
-          label="사업자등록번호"
-          value={session?.registration_number}
-        />
-
-        <CompanyProfileField
-          label="대표자명"
-          value={session?.owner_name}
-        />
-
-        <CompanyProfileField
-          label="업태"
-          value={session?.industry_type}
-        />
-
-        <CompanyProfileField
-          label="종목"
-          value={session?.business_type}
-        />
-
-        <CompanyProfileField
-          label="우편번호"
-          value={session?.postal_code}
-        />
-
-        <div className="md:col-span-2">
-          <CompanyProfileField
-            label="사업장 주소"
-            value={
-              session
-                ? `${session.address1 ?? ''} ${session.address2 ?? ''}`
-                : undefined
-            }
-          />
+        {/* RIGHT: 사업자등록증 프리뷰 + 하단 액션 */}
+        <div className="flex flex-col">
+          <div className="min-h-[360px] flex-1">
+            <Company_Document_Preview doc={doc} />
+          </div>
+          <Company_Document_Actions doc={doc} />
         </div>
       </div>
 
