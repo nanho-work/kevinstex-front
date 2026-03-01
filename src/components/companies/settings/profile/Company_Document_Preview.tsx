@@ -13,7 +13,7 @@ export default function Company_Document_Preview({ doc }: Props) {
   return (
     <div className="flex flex-col rounded-xl border border-neutral-200 bg-white shadow-sm">
 
-      <div className="relative flex-1 min-h-[520px] bg-neutral-50 overflow-hidden">
+      <div className="relative flex-1 min-h-[520px] bg-neutral-50">
         {status === 'loading' && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-sm text-neutral-500">불러오는 중...</p>
@@ -37,9 +37,11 @@ export default function Company_Document_Preview({ doc }: Props) {
           <div className="h-full w-full">
             {isPdf ? (
               <iframe
+                // NOTE: Many browser PDF viewers ignore zoom fragments in cross-origin iframes.
+                // Keep it minimal and allow the viewer to scroll normally.
                 title="business-license-preview"
-                src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0&zoom=page-width`}
-                className="h-full w-full"
+                src={`${previewUrl}#toolbar=0`}
+                className="h-[520px] w-full"
               />
             ) : (
               // 이미지면 img로

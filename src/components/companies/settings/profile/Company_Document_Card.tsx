@@ -9,7 +9,7 @@ export default function Company_Document_Card() {
 
   return (
     <div className="flex flex-col">
-      <div className="min-h-[600px] flex-1">
+      <div className="min-h-full flex-1">
         <Company_Document_Preview doc={doc} />
       </div>
 
