@@ -228,7 +228,7 @@ export default function ClientPayrollPage() {
                 직원이 목록에 없다면 직원관리에서 먼저 등록하세요.
               </p>
               <Link
-                href="/client/employees"
+                href="/companies/employees"
                 className="text-xs font-medium text-neutral-800 hover:text-neutral-900"
               >
                 직원관리로 이동 →

@@ -8,8 +8,8 @@ import Footer from '@/components/ui/Footer'
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
-  const isClientArea = pathname.startsWith('/client')
-  const isClientLogin = pathname.startsWith('/client/login')
+  const isClientArea = pathname.startsWith('/companies')
+  const isClientLogin = pathname.startsWith('/companies/login')
   const hideMarketing = isClientArea && !isClientLogin
 
   if (hideMarketing) {
