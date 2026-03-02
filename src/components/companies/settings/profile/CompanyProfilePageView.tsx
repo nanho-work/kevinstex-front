@@ -10,7 +10,7 @@ export default function CompanyProfilePageView() {
   const session = useCompanySession()
 
   return (
-    <div className="w-full px-6 py-8">
+    <div className="mb-6">
       <div className="mx-auto w-full max-w-6xl">
         <CompanyProfileHeader />
 
@@ -25,3 +25,4 @@ export default function CompanyProfilePageView() {
     </div>
   )
 }
+

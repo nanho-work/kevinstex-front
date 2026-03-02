@@ -6,8 +6,8 @@ import CompanyPasswordHelpCard from './CompanyPasswordHelpCard'
 
 export default function CompanyPasswordPageView() {
   return (
-    <main className="w-full px-4 py-8">
-      <div className="w-full">
+    <main className="w-full px-4">
+      <div className="mb-6">
         <CompanyPasswordHeader />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
