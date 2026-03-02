@@ -7,9 +7,13 @@ import type { CompanySession } from '@/types/company'
 
 const menus = [
   { label: '대시보드', href: '/companies' },
-  { label: '사업소득(3.3%)', href: '/companies/business' },
-  { label: '근로소득(4대보험)', href: '/companies/payroll' },
   { label: '직원관리', href: '/companies/employees' },
+]
+
+const withholdingMenus = [
+  { label: '사업소득(3.3%)', href: '/companies/withholding/business-33' },
+  { label: '근로소득(4대보험)', href: '/companies/withholding/payroll', disabled: true },
+  { label: '기타소득', href: '/companies/withholding/etc', disabled: true },
 ]
 
 const settingsMenus = [
@@ -29,11 +33,17 @@ export default function ClientSidebar({ isOpen, onToggle, session, sessionLoadin
   const pathname = usePathname()
 
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [withholdingOpen, setWithholdingOpen] = useState(false)
 
   useEffect(() => {
     // settings 하위 페이지에 들어오면 자동으로 펼침
     if (pathname?.startsWith('/companies/settings')) {
       setSettingsOpen(true)
+    }
+
+    // 원천세 하위 페이지에 들어오면 자동으로 펼침
+    if (pathname?.startsWith('/companies/withholding')) {
+      setWithholdingOpen(true)
     }
   }, [pathname])
 
@@ -104,6 +114,58 @@ export default function ClientSidebar({ isOpen, onToggle, session, sessionLoadin
               </li>
             )
           })}
+
+          {/* 원천세(트리) */}
+          <li className="pt-3">
+            <button
+              type="button"
+              onClick={() => setWithholdingOpen((v) => !v)}
+              className={`flex w-full items-center justify-between rounded-lg px-4 py-2 text-sm transition ${
+                pathname?.startsWith('/companies/withholding')
+                  ? 'bg-neutral-100 text-neutral-900'
+                  : 'text-neutral-700 hover:bg-neutral-100'
+              }`}
+              aria-expanded={withholdingOpen}
+            >
+              <span className="font-medium">원천세</span>
+              <span className="text-lg font-semibold text-neutral-600">
+                {withholdingOpen ? '▾' : '▸'}
+              </span>
+            </button>
+
+            {withholdingOpen && (
+              <ul className="mt-1 space-y-1 pl-2">
+                {withholdingMenus.map((m) => {
+                  const active = pathname === m.href
+                  const disabled = (m as any).disabled
+
+                  return (
+                    <li key={m.href}>
+                      {disabled ? (
+                        <div
+                          className="block cursor-not-allowed rounded-lg px-4 py-2 text-sm text-neutral-400"
+                          aria-disabled="true"
+                        >
+                          {m.label}
+                        </div>
+                      ) : (
+                        <Link
+                          href={m.href}
+                          className={`block rounded-lg px-4 py-2 text-sm transition ${
+                            active
+                              ? 'bg-neutral-900 text-white'
+                              : 'text-neutral-700 hover:bg-neutral-100'
+                          }`}
+                        >
+                          {m.label}
+                        </Link>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </li>
 
           {/* 설정(트리) */}
           <li className="pt-3">
