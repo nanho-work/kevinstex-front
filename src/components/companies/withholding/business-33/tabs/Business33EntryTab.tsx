@@ -1,12 +1,17 @@
 "use client";
 
 // src/components/companies/withholding/business-33/tabs/Business33EntryTab.tsx
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ContractorSelect, { ContractorItem } from "../components/ContractorSelect";
 import ContractorCreateModal from "../components/ContractorCreateModal";
 import PaymentEntryForm from "../components/PaymentEntryForm";
 import MonthPicker from "../components/MonthPicker";
 import StatusBadge from "../components/StatusBadge";
+import {
+  fetchContractors,
+  createContractor,
+  createWithholding33,
+} from "@/service/company/companyService";
 
 type EntryRow = {
   id: number;
@@ -21,14 +26,24 @@ type EntryRow = {
   status: "draft" | "reviewed" | "filed" | "rejected";
 };
 
-function calcIncomeTax(gross: number) {
-  return Math.floor(gross * 0.03);
-}
-function calcLocalTax(incomeTax: number) {
-  return Math.floor(incomeTax * 0.1);
-}
 function fmt(n: number) {
   return n.toLocaleString("ko-KR");
+}
+
+function toContractorItem(c: {
+  id: number;
+  name: string;
+  rrn_masked: string;
+  birth_date?: string | null;
+  status: "active" | "inactive";
+}): ContractorItem {
+  return {
+    id: c.id,
+    name: c.name,
+    rrnMasked: c.rrn_masked,
+    birthDate: c.birth_date ?? undefined,
+    status: c.status,
+  };
 }
 
 export default function Business33EntryTab() {
@@ -38,11 +53,27 @@ export default function Business33EntryTab() {
     return `${d.getFullYear()}-${mm}`;
   });
 
-  const [contractors, setContractors] = useState<ContractorItem[]>([
-    { id: 1, name: "홍길동", rrnMasked: "900101-1******", birthDate: "1990-01-01", status: "active" },
-    { id: 2, name: "김철수", rrnMasked: "880505-2******", birthDate: "1988-05-05", status: "active" },
-    { id: 3, name: "이영희", rrnMasked: "920707-2******", birthDate: "1992-07-07", status: "inactive" },
-  ]);
+  const [contractors, setContractors] = useState<ContractorItem[]>([]);
+  const [loadingContractors, setLoadingContractors] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [submittingPayment, setSubmittingPayment] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoadingContractors(true);
+        setLoadError(null);
+        const res = await fetchContractors();
+        setContractors(res.items.map((c) => toContractorItem(c)));
+      } catch (e: any) {
+        setLoadError(e?.message ?? "대상자 목록 조회에 실패했습니다.");
+      } finally {
+        setLoadingContractors(false);
+      }
+    };
+
+    load();
+  }, []);
 
   const [selectedContractorId, setSelectedContractorId] = useState<number | null>(null);
   const selectedContractor = useMemo(
@@ -53,6 +84,22 @@ export default function Business33EntryTab() {
   const [rows, setRows] = useState<EntryRow[]>([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
+  const handleCreateContractor = async (payload: {
+    name: string;
+    rrn: string;
+    birthDate?: string;
+  }) => {
+    const created = await createContractor({
+      name: payload.name,
+      rrn: payload.rrn,
+      birth_date: payload.birthDate ?? undefined,
+    });
+
+    const newItem = toContractorItem(created);
+    setContractors((prev) => [newItem, ...prev]);
+    setSelectedContractorId(created.id);
+  };
+
   return (
     <div className="space-y-4">
       <div className="rounded-lg border border-zinc-200 p-4">
@@ -60,7 +107,7 @@ export default function Business33EntryTab() {
           <div>
             <div className="text-base font-semibold">사업소득(3.3%) 신고입력</div>
             <div className="mt-1 text-sm text-zinc-600">
-              대상자 선택 후 지급내역을 추가하고, 월별로 누적되는 구조입니다(UI-only).
+              대상자 선택 후 지급내역을 입력해 저장합니다.
             </div>
           </div>
 
@@ -68,55 +115,70 @@ export default function Business33EntryTab() {
         </div>
       </div>
 
+      {loadingContractors ? (
+        <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-600">
+          대상자 목록을 불러오는 중입니다...
+        </div>
+      ) : null}
+
+      {loadError ? (
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {loadError}
+        </div>
+      ) : null}
+
       <ContractorSelect
         contractors={contractors}
         value={selectedContractorId}
         onChange={setSelectedContractorId}
         onCreateClick={() => setCreateModalOpen(true)}
-        onQuickCreate={({ name, rrn, birthDate }) => {
-          // UI-only: 실제 rrn mask/암호화는 서버 연동 시 처리
-          const newId = Math.max(0, ...contractors.map((c) => c.id)) + 1;
-          const masked =
-            rrn && rrn.includes("-")
-              ? `${rrn.slice(0, 6)}-${rrn.slice(7, 8)}******`
-              : rrn
-              ? `${rrn.slice(0, 6)}-${rrn.slice(6, 7)}******`
-              : "******-*******";
-
-          setContractors((prev) => [
-            { id: newId, name, rrnMasked: masked, birthDate, status: "active" },
-            ...prev,
-          ]);
-
-          // ✅ 바로 선택 상태로 만들어서 곧바로 금액 입력 가능
-          setSelectedContractorId(newId);
+        onQuickCreate={async ({ name, rrn, birthDate }) => {
+          try {
+            await handleCreateContractor({ name, rrn, birthDate });
+          } catch (e: any) {
+            alert(e.message);
+          }
         }}
       />
 
       <PaymentEntryForm
         disabled={!selectedContractor}
-        onSubmit={({ payDate, grossPay }) => {
+        onSubmit={async ({ payDate, grossPay }) => {
           if (!selectedContractor) return;
 
-          const incomeTax = calcIncomeTax(grossPay);
-          const localTax = calcLocalTax(incomeTax);
-          const netPay = grossPay - incomeTax - localTax;
+          try {
+            setSubmittingPayment(true);
+            const created = await createWithholding33({
+              contractor_id: selectedContractor.id,
+              target_month: targetMonth,
+              pay_date: payDate,
+              gross_pay: grossPay,
+            });
 
-          setRows((prev) => [
-            {
-              id: Date.now(),
-              contractorId: selectedContractor.id,
-              contractorName: selectedContractor.name,
-              rrnMasked: selectedContractor.rrnMasked,
-              payDate,
-              grossPay,
-              incomeTax,
-              localTax,
-              netPay,
-              status: "draft",
-            },
-            ...prev,
-          ]);
+            setRows((prev) => [
+              {
+                id: created.id,
+                contractorId: created.contractor_id,
+                contractorName: selectedContractor.name,
+                rrnMasked: selectedContractor.rrnMasked,
+                payDate: created.pay_date,
+                grossPay: created.gross_pay,
+                incomeTax: created.income_tax,
+                localTax: created.local_tax,
+                netPay: created.net_pay,
+                status: created.review_status as
+                  | "draft"
+                  | "reviewed"
+                  | "filed"
+                  | "rejected",
+              },
+              ...prev,
+            ]);
+          } catch (e: any) {
+            alert(e.message);
+          } finally {
+            setSubmittingPayment(false);
+          }
         }}
       />
 
@@ -166,6 +228,7 @@ export default function Business33EntryTab() {
                       <div className="flex justify-end gap-2">
                         <button
                           type="button"
+                          disabled={submittingPayment}
                           className="h-8 rounded-md border border-zinc-200 px-3 text-xs hover:bg-zinc-50"
                           onClick={() => {
                             setRows((prev) =>
@@ -179,6 +242,7 @@ export default function Business33EntryTab() {
                         </button>
                         <button
                           type="button"
+                          disabled={submittingPayment}
                           className="h-8 rounded-md border border-zinc-200 px-3 text-xs hover:bg-zinc-50"
                           onClick={() => setRows((prev) => prev.filter((x) => x.id !== r.id))}
                         >
@@ -197,11 +261,8 @@ export default function Business33EntryTab() {
       <ContractorCreateModal
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        onSubmit={({ name, rrn, birthDate }) => {
-          const newId = Math.max(0, ...contractors.map((c) => c.id)) + 1;
-          const masked = rrn ? `${rrn.slice(0, 6)}-${rrn.slice(7, 8)}******` : "******-*******";
-          setContractors((prev) => [{ id: newId, name, rrnMasked: masked, birthDate, status: "active" }, ...prev]);
-          setSelectedContractorId(newId);
+        onSubmit={async ({ name, rrn, birthDate }) => {
+          await handleCreateContractor({ name, rrn, birthDate });
         }}
       />
     </div>

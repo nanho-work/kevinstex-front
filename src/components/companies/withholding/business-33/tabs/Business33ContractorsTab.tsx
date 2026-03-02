@@ -1,17 +1,53 @@
 // src/components/companies/withholding/business-33/tabs/Business33ContractorsTab.tsx
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ContractorCreateModal from "../components/ContractorCreateModal";
 import { ContractorItem } from "../components/ContractorSelect";
+import {
+  createContractor,
+  fetchContractors,
+  updateContractor,
+} from "@/service/company/companyService";
+
+function toContractorItem(c: {
+  id: number;
+  name: string;
+  rrn_masked: string;
+  birth_date?: string | null;
+  status: "active" | "inactive";
+}): ContractorItem {
+  return {
+    id: c.id,
+    name: c.name,
+    rrnMasked: c.rrn_masked,
+    birthDate: c.birth_date ?? undefined,
+    status: c.status,
+  };
+}
 
 export default function Business33ContractorsTab() {
-  const [items, setItems] = useState<ContractorItem[]>([
-    { id: 1, name: "홍길동", rrnMasked: "900101-1******", birthDate: "1990-01-01", status: "active" },
-    { id: 2, name: "김철수", rrnMasked: "880505-2******", birthDate: "1988-05-05", status: "active" },
-    { id: 3, name: "이영희", rrnMasked: "920707-2******", birthDate: "1992-07-07", status: "inactive" },
-  ]);
-
+  const [items, setItems] = useState<ContractorItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [actionId, setActionId] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        setErrorMessage(null);
+        const res = await fetchContractors();
+        setItems(res.items.map((c) => toContractorItem(c)));
+      } catch (e: any) {
+        setErrorMessage(e?.message ?? "대상자 목록 조회에 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -26,7 +62,7 @@ export default function Business33ContractorsTab() {
           <div>
             <div className="text-base font-semibold">신고대상자 관리</div>
             <div className="mt-1 text-sm text-zinc-600">
-              중복 없는 대상자 마스터 목록(UI-only). 실제 유니크/암호화/정정 로직은 서버 연동 시 적용.
+              등록된 대상자 조회/등록/상태 변경을 수행합니다.
             </div>
           </div>
 
@@ -39,6 +75,12 @@ export default function Business33ContractorsTab() {
           </button>
         </div>
       </div>
+
+      {errorMessage ? (
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {errorMessage}
+        </div>
+      ) : null}
 
       <div className="rounded-lg border border-zinc-200 p-4">
         <div className="flex items-center gap-3">
@@ -67,7 +109,13 @@ export default function Business33ContractorsTab() {
             </thead>
 
             <tbody className="divide-y divide-zinc-200">
-              {filtered.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-10 text-center text-sm text-zinc-500">
+                    대상자 목록을 불러오는 중입니다...
+                  </td>
+                </tr>
+              ) : filtered.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-4 py-10 text-center text-sm text-zinc-500">
                     대상자가 없습니다.
@@ -95,25 +143,49 @@ export default function Business33ContractorsTab() {
                       <div className="flex justify-end gap-2">
                         <button
                           type="button"
+                          disabled={actionId === x.id}
                           className="h-8 rounded-md border border-zinc-200 px-3 text-xs hover:bg-zinc-50"
-                          onClick={() => {
-                            setItems((prev) =>
-                              prev.map((p) => (p.id === x.id ? { ...p, status: p.status === "active" ? "inactive" : "active" } : p))
-                            );
+                          onClick={async () => {
+                            try {
+                              setActionId(x.id);
+                              const nextStatus = x.status === "active" ? "inactive" : "active";
+                              const updated = await updateContractor(x.id, { status: nextStatus });
+                              setItems((prev) =>
+                                prev.map((p) =>
+                                  p.id === x.id ? toContractorItem(updated) : p
+                                )
+                              );
+                            } catch (e: any) {
+                              alert(e?.message ?? "상태 변경에 실패했습니다.");
+                            } finally {
+                              setActionId(null);
+                            }
                           }}
                         >
-                          상태변경
+                          {actionId === x.id ? "처리중..." : "상태변경"}
                         </button>
 
                         <button
                           type="button"
+                          disabled={actionId === x.id || x.status === "inactive"}
                           className="h-8 rounded-md border border-zinc-200 px-3 text-xs hover:bg-zinc-50"
-                          onClick={() => {
-                            // UI-only: 삭제
-                            setItems((prev) => prev.filter((p) => p.id !== x.id));
+                          onClick={async () => {
+                            try {
+                              setActionId(x.id);
+                              const updated = await updateContractor(x.id, { status: "inactive" });
+                              setItems((prev) =>
+                                prev.map((p) =>
+                                  p.id === x.id ? toContractorItem(updated) : p
+                                )
+                              );
+                            } catch (e: any) {
+                              alert(e?.message ?? "비활성화에 실패했습니다.");
+                            } finally {
+                              setActionId(null);
+                            }
                           }}
                         >
-                          삭제
+                          비활성
                         </button>
                       </div>
                     </td>
@@ -128,10 +200,14 @@ export default function Business33ContractorsTab() {
       <ContractorCreateModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSubmit={({ name, rrn, birthDate }) => {
-          const newId = Math.max(0, ...items.map((c) => c.id)) + 1;
-          const masked = rrn ? `${rrn.slice(0, 6)}-${rrn.slice(7, 8)}******` : "******-*******";
-          setItems((prev) => [{ id: newId, name, rrnMasked: masked, birthDate, status: "active" }, ...prev]);
+        onSubmit={async ({ name, rrn, birthDate }) => {
+          const created = await createContractor({
+            name,
+            rrn,
+            birth_date: birthDate ?? undefined,
+          });
+          setItems((prev) => [toContractorItem(created), ...prev]);
+          setErrorMessage(null);
         }}
       />
     </div>

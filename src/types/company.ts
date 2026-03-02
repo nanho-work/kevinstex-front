@@ -76,6 +76,21 @@ export interface CompanyDocumentListResponse {
   items: CompanyDocument[]
 }
 
+export interface CompanyDocumentCurrent {
+  company_id: number
+  doc_type_id: number
+  document_id: number
+  updated_at: string // datetime
+}
+
+export interface CompanyDocumentUploadMeta {
+  doc_type_code: string
+}
+
+export interface CompanyDocumentDeleteRequest {
+  doc_type_code: string
+}
+
 export interface CompanyDocumentPreviewResponse {
   file_name: string
   preview_url: string
@@ -102,8 +117,8 @@ export interface ConsentAgreeRequest {
 export interface CompanyConsent {
   term_id: number;
   agreed_at: string; // datetime → string
-  ip?: string;
-  user_agent?: string;
+  ip?: string | null;
+  user_agent?: string | null;
 }
 
 // 4️⃣ 사업소득자
@@ -117,9 +132,22 @@ export interface Contractor {
   id: number;
   name: string;
   rrn_masked: string;
-  status: string;
+  birth_date?: string | null; // date
+  status: 'active' | 'inactive';
   created_at: string;
   updated_at: string;
+}
+
+export interface ContractorUpdateRequest {
+  name?: string;
+  rrn?: string;
+  birth_date?: string; // date
+  status?: 'active' | 'inactive';
+}
+
+export interface ContractorListResponse {
+  total: number;
+  items: Contractor[];
 }
 
 // 5️⃣ 3.3% 지급내역
@@ -139,13 +167,60 @@ export interface Withholding33 {
   income_tax: number;
   local_tax: number;
   net_pay: number;
-  review_status: string;
-  reviewed_at?: string;
-  filed_at?: string;
+  review_status: 'draft' | 'reviewed' | 'filed' | 'rejected';
+  reviewed_at?: string | null;
+  reviewed_by_admin_id?: number | null;
+  filed_at?: string | null;
+  filed_by_admin_id?: number | null;
+  review_note?: string | null;
+  deleted_at?: string | null;
   created_at: string;
+  updated_at?: string | null;
 }
 
 export interface Withholding33ListResponse {
   total: number;
   items: Withholding33[];
+}
+
+export interface Withholding33UpdateRequest {
+  pay_date?: string; // date
+  gross_pay?: number;
+}
+
+export interface Withholding33StatusUpdateRequest {
+  review_status: 'reviewed' | 'rejected' | 'filed';
+  review_note?: string;
+}
+
+// 6️⃣ 사업소득자(3.3%) 대상자 문서
+export interface ContractorDocument {
+  id: number;
+  contractor_id: number;
+  doc_type_id: number;
+
+  doc_type_code?: string | null;
+  doc_type_name?: string | null;
+
+  file_key: string;
+  file_name: string;
+  content_type: string;
+  file_size: number;
+  is_active: boolean;
+  uploaded_at: string;
+  deleted_at?: string | null;
+}
+
+export interface ContractorDocumentListResponse {
+  total: number;
+  items: ContractorDocument[];
+}
+
+export interface ContractorDocumentUploadMeta {
+  doc_type_code: string;
+}
+
+export interface ContractorDocumentPreviewResponse {
+  file_name: string;
+  preview_url: string;
 }
