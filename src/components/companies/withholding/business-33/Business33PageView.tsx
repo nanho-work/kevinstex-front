@@ -22,7 +22,7 @@ export default function Business33PageView({ initialTab = "entry" }: Props) {
   return (
     <div className="space-y-4">
       <div className="rounded-lg ">
-        <div className="px-1 py-4">
+        <div className="px-1 pb-4">
           <div className="text-lg font-semibold">원천세 · 사업소득(3.3%)</div>
         </div>
 

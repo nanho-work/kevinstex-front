@@ -9,9 +9,9 @@ type Tab = {
 };
 
 const TABS: Tab[] = [
-  { key: "entry", label: "신고입력" },
-  { key: "history", label: "이전신고 내역" },
-  { key: "contractors", label: "신고대상자 관리" },
+  { key: "entry", label: "지급 등록" },
+  { key: "history", label: "등록 내역 조회" },
+  { key: "contractors", label: "대상자 관리" },
 ];
 
 type Props = {

@@ -43,22 +43,12 @@ export default function ContractorSelect({
 
   return (
     <div className="rounded-lg border border-zinc-200 p-4">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="text-sm font-semibold text-zinc-900">기존 대상자 추가</div>
           <div className="mt-1 text-xs text-zinc-500">가나다순 정렬</div>
         </div>
-        <button
-          type="button"
-          onClick={() => setExpanded((v) => !v)}
-          className="h-8 rounded-md border border-zinc-200 px-3 text-xs text-zinc-700 hover:bg-zinc-50"
-        >
-          {expanded ? "목록 접기" : "목록 펼치기"}
-        </button>
-      </div>
-
-      <div className="mt-2">
-        <div>
+        <div className="flex w-full items-center gap-2 md:max-w-xl">
           <input
             value={query}
             onChange={(e) => {
@@ -67,6 +57,20 @@ export default function ContractorSelect({
             placeholder="이름/주민번호(마스킹) 검색"
             className="h-10 w-full rounded-md border border-zinc-200 px-3 text-sm outline-none focus:ring-2 focus:ring-zinc-200"
           />
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            className={`h-10 shrink-0 rounded-md border border-zinc-200 px-3 text-sm font-semibold text-zinc-900 hover:bg-zinc-50 ${
+              expanded ? "" : "animate-pulse"
+            }`}
+          >
+            {expanded ? "대상자 숨기기" : "대상자 보기"}
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-2">
+        <div>
           {(expanded || query.trim().length > 0) && (
             <div className="mt-2 max-h-56 overflow-auto rounded-md border border-zinc-200 p-2">
               {filtered.length === 0 ? (

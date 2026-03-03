@@ -8,6 +8,7 @@ import {
   Withholding33CreateRequest,
   Withholding33,
   Withholding33ListResponse,
+  Withholding33ListQuery,
   Withholding33StatusUpdateRequest,
   ContractorDocument,
   ContractorDocumentListResponse,
@@ -110,14 +111,22 @@ export async function createWithholding33(
   });
 }
 
-// 목록 조회 (target_month optional)
+// 목록 조회 (target_month / contractor_id optional)
 export async function fetchWithholding33List(
-  targetMonth?: string | null
+  query?: Withholding33ListQuery
 ): Promise<Withholding33ListResponse> {
-  const qs =
-    targetMonth && targetMonth.trim().length > 0
-      ? `?target_month=${encodeURIComponent(targetMonth)}`
-      : "";
+  const params = new URLSearchParams();
+  if (query?.target_month && query.target_month.trim().length > 0) {
+    params.set("target_month", query.target_month);
+  }
+  if (
+    typeof query?.contractor_id === "number" &&
+    Number.isFinite(query.contractor_id) &&
+    query.contractor_id > 0
+  ) {
+    params.set("contractor_id", String(query.contractor_id));
+  }
+  const qs = params.toString() ? `?${params.toString()}` : "";
   return request<Withholding33ListResponse>(`/company/withholding33${qs}`);
 }
 

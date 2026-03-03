@@ -330,14 +330,14 @@ export default function Business33EntryTab() {
       <div className="rounded-lg border border-zinc-200 p-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="text-base font-semibold">사업소득(3.3%) 신고입력</div>
+            <div className="text-base font-semibold">지급 등록</div>
             <ul className="mt-2 space-y-1 text-sm text-zinc-600">
-              <li>기존 대상자가 있는 경우, 상단 `기존 대상자 추가`에서 선택해 행에 추가하세요.</li>
-              <li>신규 대상자는 입력행에서 이름/주민번호를 직접 입력한 뒤 확정하세요.</li>
+              <li>기존 대상자는 상단 `기존 대상자 추가`에서 선택하면 입력행에 바로 추가됩니다.</li>
+              <li>신규 대상자는 이름/주민번호와 총지급액을 입력한 뒤 `확정`을 누르면 등록됩니다.</li>
             </ul>
           </div>
 
-          <MonthPicker value={targetMonth} onChange={setTargetMonth} label="신고 월" />
+          <MonthPicker value={targetMonth} onChange={setTargetMonth} label="등록 월" />
         </div>
       </div>
 
@@ -361,7 +361,10 @@ export default function Business33EntryTab() {
 
       <div className="rounded-lg border border-zinc-200 overflow-hidden">
         <div className="bg-zinc-50 px-4 py-3 flex items-center justify-between">
-          <div className="text-sm font-semibold">입력 행</div>
+          <div className="flex items-center gap-2">
+            <div className="text-sm font-semibold">입력 행</div>
+            <div className="text-xs text-zinc-600">입력 후 확정버튼을 눌러주세요.</div>
+          </div>
           <button
             type="button"
             onClick={addEmptyRow}
@@ -374,14 +377,14 @@ export default function Business33EntryTab() {
         <div className="overflow-x-auto">
           <table className="min-w-[1100px] w-full text-sm">
             <thead className="bg-white border-b border-zinc-200">
-              <tr className="text-left text-xs text-zinc-500">
+              <tr className="text-center text-xs text-zinc-500">
                 <th className="px-4 py-3">대상자</th>
                 <th className="px-4 py-3">주민번호</th>
-                <th className="px-4 py-3 text-right">총지급액</th>
-                <th className="px-4 py-3 text-right">소득세(3%)</th>
-                <th className="px-4 py-3 text-right">지방세(10%)</th>
-                <th className="px-4 py-3 text-right">실지급액</th>
-                <th className="px-4 py-3 text-right">작업</th>
+                <th className="px-4 py-3">총지급액</th>
+                <th className="px-4 py-3">소득세(3%)</th>
+                <th className="px-4 py-3">지방세(10%)</th>
+                <th className="px-4 py-3">실지급액</th>
+                <th className="px-4 py-3">작업</th>
               </tr>
             </thead>
 
@@ -397,7 +400,7 @@ export default function Business33EntryTab() {
 
                 return (
                   <tr key={row.rowId} className="bg-white align-top">
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-center">
                       {row.contractorId ? (
                         <div className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2">
                           <div className="text-sm font-medium text-zinc-900">{row.name}</div>
@@ -418,15 +421,15 @@ export default function Business33EntryTab() {
                               }));
                             }}
                             placeholder="이름 직접 입력"
-                            className="h-9 w-full rounded-md border border-zinc-200 px-3 text-sm outline-none focus:ring-2 focus:ring-zinc-200"
+                            className="h-9 w-full rounded-md border border-zinc-200 px-3 text-center text-sm outline-none focus:ring-2 focus:ring-zinc-200"
                           />
                         </div>
                       )}
                     </td>
 
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-center">
                       {row.contractorId ? (
-                        <div className="h-9 rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm leading-9 text-zinc-700">
+                        <div className="h-9 rounded-md border border-zinc-200 bg-zinc-50 px-3 text-center text-sm leading-9 text-zinc-700">
                           {row.rrnMasked || "-"}
                         </div>
                       ) : (
@@ -442,12 +445,12 @@ export default function Business33EntryTab() {
                             }));
                           }}
                           placeholder="예: 900101-1234567"
-                          className="h-9 w-full rounded-md border border-zinc-200 px-3 text-sm outline-none focus:ring-2 focus:ring-zinc-200"
+                          className="h-9 w-full rounded-md border border-zinc-200 px-3 text-center text-sm outline-none focus:ring-2 focus:ring-zinc-200"
                         />
                       )}
                     </td>
 
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-center">
                       <input
                         value={row.grossPay}
                         onChange={(e) => {
@@ -473,8 +476,8 @@ export default function Business33EntryTab() {
                     <td className="px-4 py-3 text-right">{fmt(row.localTax)}</td>
                     <td className="px-4 py-3 text-right font-semibold">{fmt(row.netPay)}</td>
 
-                    <td className="px-4 py-3">
-                      <div className="flex justify-end gap-2">
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex justify-center gap-2">
                         <button
                           type="button"
                           disabled={!canConfirm}
@@ -505,10 +508,10 @@ export default function Business33EntryTab() {
             </tbody>
             <tfoot className="border-t border-zinc-200 bg-zinc-50">
               <tr className="text-sm">
-                <td className="px-4 py-3 font-semibold text-zinc-800">
+                <td className="px-4 py-3 text-center font-semibold text-zinc-800">
                   합계 ({draftSummary.contractorCount}명)
                 </td>
-                <td className="px-4 py-3 text-zinc-500">-</td>
+                <td className="px-4 py-3 text-center text-zinc-500">-</td>
                 <td className="px-4 py-3 text-right font-semibold text-zinc-800">
                   {fmt(draftSummary.totalGrossPay)}
                 </td>
@@ -521,7 +524,7 @@ export default function Business33EntryTab() {
                 <td className="px-4 py-3 text-right font-semibold text-zinc-800">
                   {fmt(draftSummary.totalNetPay)}
                 </td>
-                <td className="px-4 py-3 text-right text-xs text-zinc-500">입력행 기준</td>
+                <td className="px-4 py-3 text-center text-xs text-zinc-500">입력행 기준</td>
               </tr>
             </tfoot>
           </table>
@@ -530,20 +533,20 @@ export default function Business33EntryTab() {
 
       <div className="rounded-lg border border-zinc-200 overflow-hidden">
         <div className="bg-zinc-50 px-4 py-3">
-          <div className="text-sm font-semibold">등록된 인원</div>
-          <div className="mt-1 text-xs text-zinc-500">등록된 인원은 세무사에 전송된 내역입니다.</div>
+          <div className="text-sm font-semibold">등록 완료 내역</div>
+          <div className="mt-1 text-xs text-zinc-500">확정한 지급 건이 아래 목록에 표시됩니다.</div>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[900px] w-full text-sm">
             <thead className="bg-white border-b border-zinc-200">
-              <tr className="text-left text-xs text-zinc-500">
+              <tr className="text-center text-xs text-zinc-500">
                 <th className="px-4 py-3">상태</th>
                 <th className="px-4 py-3">대상자</th>
                 <th className="px-4 py-3">주민번호</th>
-                <th className="px-4 py-3 text-right">총지급액</th>
-                <th className="px-4 py-3 text-right">소득세</th>
-                <th className="px-4 py-3 text-right">지방세</th>
-                <th className="px-4 py-3 text-right">실지급액</th>
+                <th className="px-4 py-3">총지급액</th>
+                <th className="px-4 py-3">소득세</th>
+                <th className="px-4 py-3">지방세</th>
+                <th className="px-4 py-3">실지급액</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-200">
@@ -556,11 +559,11 @@ export default function Business33EntryTab() {
               ) : (
                 savedRows.map((row) => (
                   <tr key={row.id} className="bg-white">
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-center">
                       <StatusBadge status={row.status} />
                     </td>
-                    <td className="px-4 py-3 font-medium">{row.contractorName}</td>
-                    <td className="px-4 py-3 text-zinc-600">{row.rrnMasked}</td>
+                    <td className="px-4 py-3 text-center font-medium">{row.contractorName}</td>
+                    <td className="px-4 py-3 text-center text-zinc-600">{row.rrnMasked}</td>
                     <td className="px-4 py-3 text-right">{fmt(row.grossPay)}</td>
                     <td className="px-4 py-3 text-right">{fmt(row.incomeTax)}</td>
                     <td className="px-4 py-3 text-right">{fmt(row.localTax)}</td>

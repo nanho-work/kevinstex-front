@@ -53,7 +53,7 @@ export default function Business33HistoryTab() {
 
         const [contractorRes, listRes] = await Promise.all([
           fetchContractors(),
-          fetchWithholding33List(targetMonth),
+          fetchWithholding33List({ target_month: targetMonth }),
         ]);
 
         const map = contractorRes.items.reduce<Record<number, Contractor>>((acc, c) => {
@@ -76,8 +76,10 @@ export default function Business33HistoryTab() {
   }, [targetMonth]);
 
   const summary = useMemo(() => {
-    return rows.reduce(
+    const contractorIds = new Set<number>();
+    const totals = rows.reduce(
       (acc, row) => {
+        contractorIds.add(row.contractor_id);
         acc.gross += row.gross_pay;
         acc.income += row.income_tax;
         acc.local += row.local_tax;
@@ -86,6 +88,31 @@ export default function Business33HistoryTab() {
       },
       { gross: 0, income: 0, local: 0, net: 0 }
     );
+    return {
+      ...totals,
+      contractorCount: contractorIds.size,
+      rowCount: rows.length,
+    };
+  }, [rows]);
+
+  const sortedRows = useMemo(() => {
+    const collator = new Intl.Collator("ko-KR");
+    return [...rows].sort((a, b) => {
+      const nameA = contractorMap[a.contractor_id]?.name ?? `대상자 #${a.contractor_id}`;
+      const nameB = contractorMap[b.contractor_id]?.name ?? `대상자 #${b.contractor_id}`;
+      const byName = collator.compare(nameA, nameB);
+      if (byName !== 0) return byName;
+      const byMonth = String(a.target_month).localeCompare(String(b.target_month));
+      if (byMonth !== 0) return byMonth;
+      return a.id - b.id;
+    });
+  }, [rows, contractorMap]);
+
+  const rowCountByContractorId = useMemo(() => {
+    return rows.reduce<Record<number, number>>((acc, row) => {
+      acc[row.contractor_id] = (acc[row.contractor_id] ?? 0) + 1;
+      return acc;
+    }, {});
   }, [rows]);
 
   return (
@@ -93,9 +120,9 @@ export default function Business33HistoryTab() {
       <div className="rounded-lg border border-zinc-200 p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="text-base font-semibold">이전신고 내역</div>
+            <div className="text-base font-semibold">등록 내역 조회</div>
             <div className="mt-1 text-sm text-zinc-600">
-              월별/전체 지급내역과 처리 상태를 확인할 수 있습니다.
+              월별 지급 내역과 세무사 처리 상태를 확인할 수 있습니다.
             </div>
           </div>
 
@@ -149,20 +176,20 @@ export default function Business33HistoryTab() {
       ) : null}
 
       <div className="rounded-lg border border-zinc-200 overflow-hidden">
-        <div className="bg-zinc-50 px-4 py-3 text-sm font-semibold">조회 결과</div>
+        <div className="bg-zinc-50 px-4 py-3 text-sm font-semibold">조회된 내역</div>
 
         <div className="overflow-x-auto">
           <table className="min-w-[1100px] w-full text-sm">
             <thead className="bg-white border-b border-zinc-200">
-              <tr className="text-left text-xs text-zinc-500">
+              <tr className="text-center text-xs text-zinc-500">
                 <th className="px-4 py-3">상태</th>
                 <th className="px-4 py-3">대상자</th>
                 <th className="px-4 py-3">주민번호</th>
                 <th className="px-4 py-3">신고월</th>
-                <th className="px-4 py-3 text-right">총지급액</th>
-                <th className="px-4 py-3 text-right">소득세</th>
-                <th className="px-4 py-3 text-right">지방세</th>
-                <th className="px-4 py-3 text-right">실지급액</th>
+                <th className="px-4 py-3">총지급액</th>
+                <th className="px-4 py-3">소득세</th>
+                <th className="px-4 py-3">지방세</th>
+                <th className="px-4 py-3">실지급액</th>
                 <th className="px-4 py-3">메모</th>
                 <th className="px-4 py-3">등록일</th>
               </tr>
@@ -175,31 +202,38 @@ export default function Business33HistoryTab() {
                     내역을 불러오는 중입니다...
                   </td>
                 </tr>
-              ) : rows.length === 0 ? (
+              ) : sortedRows.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="px-4 py-10 text-center text-sm text-zinc-500">
                     조회된 내역이 없습니다.
                   </td>
                 </tr>
               ) : (
-                rows.map((row) => {
+                sortedRows.map((row) => {
                   const contractor = contractorMap[row.contractor_id];
                   return (
                     <tr key={row.id} className="bg-white">
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 text-center">
                         <StatusBadge status={row.review_status} />
                       </td>
-                      <td className="px-4 py-3 font-medium text-zinc-900">
-                        {contractor?.name ?? `대상자 #${row.contractor_id}`}
+                      <td className="px-4 py-3 text-center font-medium text-zinc-900">
+                        <div className="flex items-center justify-center gap-2">
+                          <span>{contractor?.name ?? `대상자 #${row.contractor_id}`}</span>
+                          {(rowCountByContractorId[row.contractor_id] ?? 0) > 1 ? (
+                            <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-600">
+                              {rowCountByContractorId[row.contractor_id]}건
+                            </span>
+                          ) : null}
+                        </div>
                       </td>
-                      <td className="px-4 py-3 text-zinc-600">{contractor?.rrn_masked ?? "-"}</td>
-                      <td className="px-4 py-3 text-zinc-600">{row.target_month}</td>
+                      <td className="px-4 py-3 text-center text-zinc-600">{contractor?.rrn_masked ?? "-"}</td>
+                      <td className="px-4 py-3 text-center text-zinc-600">{row.target_month}</td>
                       <td className="px-4 py-3 text-right">{fmt(row.gross_pay)}</td>
                       <td className="px-4 py-3 text-right">{fmt(row.income_tax)}</td>
                       <td className="px-4 py-3 text-right">{fmt(row.local_tax)}</td>
                       <td className="px-4 py-3 text-right font-semibold">{fmt(row.net_pay)}</td>
-                      <td className="px-4 py-3 text-xs text-zinc-600">{row.review_note || "-"}</td>
-                      <td className="px-4 py-3 text-xs text-zinc-500">{toDateText(row.created_at)}</td>
+                      <td className="px-4 py-3 text-center text-xs text-zinc-600">{row.review_note || "-"}</td>
+                      <td className="px-4 py-3 text-center text-xs text-zinc-500">{toDateText(row.created_at)}</td>
                     </tr>
                   );
                 })
@@ -208,8 +242,13 @@ export default function Business33HistoryTab() {
 
             <tfoot className="border-t border-zinc-200 bg-zinc-50">
               <tr className="text-sm">
-                <td className="px-4 py-3 font-semibold text-zinc-800" colSpan={4}>
-                  합계
+                <td className="px-4 py-3 text-center font-semibold text-zinc-800" colSpan={4}>
+                  <div className="flex items-center justify-center gap-2">
+                    <span>합계 (고유 대상자 {summary.contractorCount}명, 등록건 {summary.rowCount}건)</span>
+                    <span className="text-xs text-zinc-500">
+                      안내(같은 대상자는 월별로 여러 건 등록될 수 있습니다.)
+                    </span>
+                  </div>
                 </td>
                 <td className="px-4 py-3 text-right font-semibold text-zinc-800">{fmt(summary.gross)}</td>
                 <td className="px-4 py-3 text-right font-semibold text-zinc-800">{fmt(summary.income)}</td>

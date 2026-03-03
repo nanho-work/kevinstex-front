@@ -10,19 +10,22 @@ function labelForSegment(seg: string): string {
   const map: Record<string, string> = {
     // 공통
     companies: '홈',
-
-    // 예시(확장하면서 추가)
-    filings: '신고',
-    withholding33: '3.3 신고',
-    payroll: '근로소득 신고',
-
-    documents: '서류',
-    downloads: '다운로드',
-
+    employees: '직원관리',
+    payroll: '급여관리',
     settings: '설정',
+    profile: '사업장 정보',
+    password: '비밀번호 변경',
+
+    // 원천세
+    withholding: '원천세 관리',
+    'business-33': '사업소득(3.3%)',
+    etc: '기타소득',
   }
 
   if (map[seg]) return map[seg]
+
+  // id성 경로는 의미 없는 숫자 노출 대신 상세로 통일
+  if (/^\d+$/.test(seg)) return '상세'
 
   // 기본 fallback: 하이픈/언더스코어를 공백으로
   return decodeURIComponent(seg).replace(/[-_]/g, ' ')

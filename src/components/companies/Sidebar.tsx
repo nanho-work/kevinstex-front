@@ -5,10 +5,9 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import type { CompanySession } from '@/types/company'
 
-const menus = [
-  { label: '대시보드', href: '/companies' },
-  { label: '직원관리', href: '/companies/employees' },
-]
+const topMenus = [{ label: '대시보드', href: '/companies' }]
+
+const employeeMenus = [{ label: '직원관리', href: '/companies/employees' }]
 
 const withholdingMenus = [
   { label: '사업소득(3.3%)', href: '/companies/withholding/business-33' },
@@ -97,7 +96,7 @@ export default function ClientSidebar({ isOpen, onToggle, session, sessionLoadin
       <nav className="flex-1 px-3 py-4">
         <p className="px-2 pb-2 text-xs font-medium text-neutral-500">메뉴</p>
         <ul className="space-y-1">
-          {menus.map((m) => {
+          {topMenus.map((m) => {
             const active = pathname === m.href
             return (
               <li key={m.href}>
@@ -166,6 +165,24 @@ export default function ClientSidebar({ isOpen, onToggle, session, sessionLoadin
               </ul>
             )}
           </li>
+
+          {employeeMenus.map((m) => {
+            const active = pathname === m.href
+            return (
+              <li key={m.href} className="pt-3">
+                <Link
+                  href={m.href}
+                  className={`block rounded-lg px-4 py-2 text-sm transition ${
+                    active
+                      ? 'bg-neutral-900 text-white'
+                      : 'text-neutral-700 hover:bg-neutral-100'
+                  }`}
+                >
+                  {m.label}
+                </Link>
+              </li>
+            )
+          })}
 
           {/* 설정(트리) */}
           <li className="pt-3">

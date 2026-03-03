@@ -183,6 +183,11 @@ export interface Withholding33ListResponse {
   items: Withholding33[];
 }
 
+export type Withholding33ListQuery = {
+  target_month?: string;
+  contractor_id?: number;
+};
+
 export interface Withholding33UpdateRequest {
   pay_date?: string; // date
   gross_pay?: number;
