@@ -44,12 +44,6 @@ export default function Header() {
             >
               서비스소개
             </Link>
-            {/* <Link
-              href="/correction"
-              className={`${pathname === '/correction' ? 'text-blue-800 bg-blue-50' : 'text-gray-800 hover:text-blue-800 hover:bg-gray-50'} transition rounded-lg px-3 py-2`}
-            >
-              경정청구
-            </Link> */}
             <Link
               href="/blog"
               className={`${pathname === '/blog'
@@ -116,9 +110,6 @@ export default function Header() {
           </Link>
           <Link href="/service" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/service' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             서비스소개
-          </Link>
-          <Link href="/correction" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/correction' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
-            경정청구
           </Link>
           <Link href="/blog" onClick={() => setMenuOpen(false)} className={`block px-2 py-1 ${pathname === '/blog' ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
             블로그
