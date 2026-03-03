@@ -7,6 +7,8 @@ import {
   ContractorListResponse,
   Withholding33CreateRequest,
   Withholding33,
+  Withholding33ListResponse,
+  Withholding33StatusUpdateRequest,
   ContractorDocument,
   ContractorDocumentListResponse,
   ContractorDocumentPreviewResponse,
@@ -96,8 +98,43 @@ export async function updateContractor(
 export async function createWithholding33(
   payload: Withholding33CreateRequest
 ): Promise<Withholding33> {
+  const body = JSON.stringify(
+    Object.fromEntries(
+      Object.entries(payload).filter(([, value]) => value !== undefined && value !== null)
+    )
+  );
+
   return request<Withholding33>("/company/withholding33", {
     method: "POST",
+    body,
+  });
+}
+
+// 목록 조회 (target_month optional)
+export async function fetchWithholding33List(
+  targetMonth?: string | null
+): Promise<Withholding33ListResponse> {
+  const qs =
+    targetMonth && targetMonth.trim().length > 0
+      ? `?target_month=${encodeURIComponent(targetMonth)}`
+      : "";
+  return request<Withholding33ListResponse>(`/company/withholding33${qs}`);
+}
+
+// 단건 조회
+export async function fetchWithholding33(
+  paymentId: number
+): Promise<Withholding33> {
+  return request<Withholding33>(`/company/withholding33/${paymentId}`);
+}
+
+// 상태 변경
+export async function updateWithholding33Status(
+  paymentId: number,
+  payload: Withholding33StatusUpdateRequest
+): Promise<Withholding33> {
+  return request<Withholding33>(`/company/withholding33/${paymentId}/status`, {
+    method: "PATCH",
     body: JSON.stringify(payload),
   });
 }

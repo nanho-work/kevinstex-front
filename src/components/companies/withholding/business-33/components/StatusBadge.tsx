@@ -4,10 +4,10 @@ import React from "react";
 export type ReviewStatus = "draft" | "reviewed" | "filed" | "rejected";
 
 const labelMap: Record<ReviewStatus, string> = {
-  draft: "작성중",
-  reviewed: "검토중",
+  draft: "확인중",
+  reviewed: "확인완료",
   filed: "신고완료",
-  rejected: "확인요망",
+  rejected: "반려/확인요청",
 };
 
 export default function StatusBadge({ status }: { status: ReviewStatus }) {

@@ -4,7 +4,7 @@ import Business33PageView from '@/components/companies/withholding/business-33/B
 
 export default function Business33Page() {
   return (
-    <div className="p-6">
+    <div className="p-2">
       <Business33PageView />
     </div>
   )

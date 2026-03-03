@@ -21,12 +21,9 @@ export default function Business33PageView({ initialTab = "entry" }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-zinc-200 bg-white">
-        <div className="px-4 py-4">
+      <div className="rounded-lg ">
+        <div className="px-1 py-4">
           <div className="text-lg font-semibold">원천세 · 사업소득(3.3%)</div>
-          <div className="mt-1 text-sm text-zinc-600">
-            고객사 포털에서 사업소득 대상자/지급내역을 관리합니다(UI-only).
-          </div>
         </div>
 
         <Business33Tabs value={tab} onChange={setTab} />

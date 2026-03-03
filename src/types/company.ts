@@ -154,7 +154,7 @@ export interface ContractorListResponse {
 export interface Withholding33CreateRequest {
   contractor_id: number;
   target_month: string; // YYYY-MM
-  pay_date: string; // date
+  pay_date?: string | null; // date
   gross_pay: number;
 }
 
@@ -162,7 +162,7 @@ export interface Withholding33 {
   id: number;
   contractor_id: number;
   target_month: string;
-  pay_date: string;
+  pay_date?: string | null;
   gross_pay: number;
   income_tax: number;
   local_tax: number;
@@ -189,8 +189,8 @@ export interface Withholding33UpdateRequest {
 }
 
 export interface Withholding33StatusUpdateRequest {
-  review_status: 'reviewed' | 'rejected' | 'filed';
-  review_note?: string;
+  review_status: 'draft' | 'reviewed' | 'rejected' | 'filed';
+  review_note?: string | null;
 }
 
 // 6️⃣ 사업소득자(3.3%) 대상자 문서
