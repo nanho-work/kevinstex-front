@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { getCompanySession } from '@/service/company/auth'
 import ClientSidebar from '@/components/companies/Sidebar'
 import ClientHeader from '@/components/companies/Header'
+import CompanyWorkChatLauncher from '@/components/companies/chat/CompanyWorkChatLauncher'
 
 const CompanySessionContext = createContext<CompanySession | null>(null)
 
@@ -93,6 +94,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
             {children}
           </main>
         </div>
+        <CompanyWorkChatLauncher />
       </div>
     </CompanySessionContext.Provider>
   )
