@@ -53,7 +53,7 @@ export default function BlogSection() {
       try {
         setLoading(true);
         setError(null);
-        const data = await fetchBlogList({ page, page_size: 9, status: 'draft' });
+        const data = await fetchBlogList({ page, page_size: 9 });
         if (!ignore) {
           setItems((prev) => [...prev, ...(Array.isArray(data.items) ? data.items : [])]);
           if (data.items.length < 9) setHasMore(false);

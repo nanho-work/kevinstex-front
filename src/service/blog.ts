@@ -20,27 +20,26 @@ export async function fetchBlogList(params: {
   page_size?: number;
   category_id?: number;
   keyword_id?: number;
-  status?: 'draft' | 'published' | 'archived';
   q?: string;
 } = {}): Promise<BlogListResponse> {
-  const url = `${BASE_URL}/blog/posts${toQS(params)}`;
+  const url = `${BASE_URL}/blog/public/posts${toQS({ ...params, status: 'published' })}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: { Accept: 'application/json' },
     cache: 'no-store', // CSR/MVP는 최신 우선. RSC/ISR 쓰면 제거하고 revalidate 사용
   });
   if (!res.ok) {
-    throw new Error(`GET /blog/posts failed: ${res.status} ${res.statusText}`);
+    throw new Error(`GET /blog/public/posts failed: ${res.status} ${res.statusText}`);
   }
   return res.json() as Promise<BlogListResponse>;
 }
 
 /** (선택) 슬러그로 단건 조회 — 상세 페이지용 */
 export async function fetchBlogBySlug(slug: string): Promise<BlogPostResponse> {
-  const url = `${BASE_URL}/blog/posts/slug/${encodeURIComponent(slug)}`;
+  const url = `${BASE_URL}/blog/public/posts/slug/${encodeURIComponent(slug)}`;
   const res = await fetch(url, { headers: { Accept: 'application/json' }, cache: 'no-store' });
   if (!res.ok) {
-    throw new Error(`GET /blog/posts/slug/${slug} failed: ${res.status} ${res.statusText}`);
+    throw new Error(`GET /blog/public/posts/slug/${slug} failed: ${res.status} ${res.statusText}`);
   }
   return res.json() as Promise<BlogPostResponse>;
 }
@@ -56,10 +55,10 @@ export async function fetchBlogCategories(): Promise<
     post_count: number
   }[]
 > {
-  const url = `${BASE_URL}/blog/categories`;
+  const url = `${BASE_URL}/blog/public/categories`;
   const res = await fetch(url, { headers: { Accept: 'application/json' }, cache: 'no-store' });
   if (!res.ok) {
-    throw new Error(`GET /blog/categories failed: ${res.status} ${res.statusText}`);
+    throw new Error(`GET /blog/public/categories failed: ${res.status} ${res.statusText}`);
   }
   return res.json();
 }
@@ -68,10 +67,10 @@ export async function fetchBlogCategories(): Promise<
 export async function fetchBlogKeywords(): Promise<
   { id: number; name: string; slug: string; created_at: string; updated_at: string }[]
 > {
-  const url = `${BASE_URL}/blog/keywords`;
+  const url = `${BASE_URL}/blog/public/keywords`;
   const res = await fetch(url, { headers: { Accept: 'application/json' }, cache: 'no-store' });
   if (!res.ok) {
-    throw new Error(`GET /blog/keywords failed: ${res.status} ${res.statusText}`);
+    throw new Error(`GET /blog/public/keywords failed: ${res.status} ${res.statusText}`);
   }
   return res.json();
 }

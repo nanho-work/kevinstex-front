@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { BlogPostResponse } from '@/types/blog';
 import Lightbox from 'yet-another-react-lightbox';
+import DOMPurify from 'dompurify';
 import 'yet-another-react-lightbox/styles.css';
 
 type BlogDetailProps = {
@@ -15,6 +16,7 @@ export default function BlogDetail({ post }: BlogDetailProps) {
     const [open, setOpen] = useState(false);
     const [imageIndex, setImageIndex] = useState(0);
     const [images, setImages] = useState<{ src: string }[]>([]);
+    const sanitizedHtml = useMemo(() => DOMPurify.sanitize(post.content_md ?? ''), [post.content_md]);
 
     const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLImageElement;
@@ -50,7 +52,7 @@ export default function BlogDetail({ post }: BlogDetailProps) {
                 <div className="mb-6 w-full h-60 rounded-md bg-gray-100 border" />
             )}
             <div className="prose prose-neutral max-w-none mt-8" onClick={handleImageClick}>
-                <div dangerouslySetInnerHTML={{ __html: post.content_md }} />
+                <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
             </div>
             <Lightbox
                 open={open}
