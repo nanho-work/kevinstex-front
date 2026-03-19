@@ -22,7 +22,7 @@ export async function fetchBlogList(params: {
   keyword_id?: number;
   q?: string;
 } = {}): Promise<BlogListResponse> {
-  const url = `${BASE_URL}/blog/public/posts${toQS({ ...params, status: 'published' })}`;
+  const url = `${BASE_URL}/blog/public/posts${toQS(params)}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: { Accept: 'application/json' },
