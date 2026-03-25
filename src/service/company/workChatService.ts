@@ -6,6 +6,8 @@ import type {
   WorkChatMessage,
   WorkChatMessageListResponse,
   WorkChatMessageSearchResponse,
+  WorkChatReadCursor,
+  WorkChatRoomPreferenceUpdateRequest,
   WorkChatRoom,
   WorkChatRoomListResponse,
 } from "@/types/workChat";
@@ -82,11 +84,18 @@ async function requestForm<T>(path: string, form: FormData): Promise<T> {
 }
 
 function normalizeRoom(raw: any): WorkChatRoom {
+  const membersRaw = Array.isArray(raw?.members) ? raw.members : [];
   return {
     id: Number(raw?.id ?? raw?.room_id ?? 0),
     room_type: (raw?.room_type ?? "company_bridge") as WorkChatRoom["room_type"],
+    client_id: raw?.client_id == null ? undefined : Number(raw.client_id),
+    company_id: raw?.company_id == null ? null : Number(raw.company_id),
     name: raw?.name == null ? null : String(raw.name),
     display_name: raw?.display_name == null ? null : String(raw.display_name),
+    is_active: raw?.is_active == null ? true : Boolean(raw.is_active),
+    is_hidden: raw?.is_hidden == null ? false : Boolean(raw.is_hidden),
+    is_muted: raw?.is_muted == null ? false : Boolean(raw.is_muted),
+    muted_until: raw?.muted_until == null ? null : String(raw.muted_until),
     unread_count: Number(raw?.unread_count ?? 0),
     unread_count_display:
       typeof raw?.unread_count_display === "string"
@@ -95,6 +104,18 @@ function normalizeRoom(raw: any): WorkChatRoom {
     last_message_preview: raw?.last_message_preview == null ? null : String(raw.last_message_preview),
     last_message_id: raw?.last_message_id == null ? null : Number(raw.last_message_id),
     last_message_at: raw?.last_message_at == null ? null : String(raw.last_message_at),
+    created_at: raw?.created_at == null ? undefined : String(raw.created_at),
+    updated_at: raw?.updated_at == null ? undefined : String(raw.updated_at),
+    members: membersRaw.map((m: any) => ({
+      member_type: String(m?.member_type || "admin") as "admin" | "client_account" | "company_account",
+      member_id: Number(m?.member_id ?? 0),
+      name: m?.name == null ? null : String(m.name),
+      profile_image_url: m?.profile_image_url == null ? null : String(m.profile_image_url),
+      role: m?.role == null ? undefined : String(m.role),
+      is_active: m?.is_active == null ? undefined : Boolean(m.is_active),
+      joined_at: m?.joined_at == null ? undefined : String(m.joined_at),
+      left_at: m?.left_at == null ? null : String(m.left_at),
+    })),
   };
 }
 
@@ -147,12 +168,17 @@ export const companyWorkChatApi = {
     if (query?.room_type) params.set("room_type", query.room_type);
     if (query?.page) params.set("page", String(query.page));
     if (query?.size) params.set("size", String(query.size));
+    if (typeof query?.include_hidden === "boolean") {
+      params.set("include_hidden", String(query.include_hidden));
+    }
     const qs = params.toString() ? `?${params.toString()}` : "";
     const data = await requestJson<any>(`/company/chats/rooms${qs}`);
     const itemsRaw = Array.isArray(data?.items) ? data.items : [];
     return {
       total: Number(data?.total ?? itemsRaw.length ?? 0),
-      items: itemsRaw.map((r: any) => normalizeRoom(r)).filter((r: WorkChatRoom) => r.id > 0),
+      items: itemsRaw
+        .map((r: any) => normalizeRoom(r))
+        .filter((r: WorkChatRoom) => r.id > 0 && r.is_active !== false),
     };
   },
 
@@ -219,6 +245,42 @@ export const companyWorkChatApi = {
 
   async leaveRoom(roomId: number): Promise<void> {
     await requestJson(`/company/chats/rooms/${roomId}/leave`, { method: "POST" });
+  },
+
+  async updateRoomPreference(
+    roomId: number,
+    payload: WorkChatRoomPreferenceUpdateRequest
+  ): Promise<WorkChatRoom> {
+    const data = await requestJson<any>(`/company/chats/rooms/${roomId}/preference`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+    return normalizeRoom(data);
+  },
+
+  async listReadCursors(roomId: number): Promise<WorkChatReadCursor[]> {
+    const data = await requestJson<any>(`/company/chats/rooms/${roomId}/read-cursors`);
+    const items = Array.isArray(data?.items) ? data.items : [];
+    return items
+      .map((row: any) => ({
+        room_id: roomId,
+        member_type: String(row?.member_type || "admin") as
+          | "admin"
+          | "client_account"
+          | "company_account",
+        member_id: Number(row?.member_id ?? 0),
+        member_name: row?.member_name == null ? null : String(row.member_name),
+        last_read_message_id:
+          row?.last_read_message_id == null ? null : Number(row.last_read_message_id),
+        read_at: row?.read_at == null ? null : String(row.read_at),
+      }))
+      .filter((row: WorkChatReadCursor) => row.member_id > 0);
+  },
+
+  async deleteMessage(messageId: number): Promise<void> {
+    await requestJson(`/company/chats/messages/${messageId}`, {
+      method: "DELETE",
+    });
   },
 
   async getAttachmentPreviewUrl(attachmentId: number): Promise<WorkChatAttachmentUrlOut> {

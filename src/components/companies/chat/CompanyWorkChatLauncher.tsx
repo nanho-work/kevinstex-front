@@ -37,6 +37,7 @@ const ALLOWED_EXTS = [
 ];
 const BLOCKED_EXTS = [".exe", ".dll", ".bat", ".cmd", ".sh", ".ps1", ".vbs", ".js", ".jar", ".scr", ".com"];
 const WS_UNAUTHORIZED_CODES = new Set([4401, 4403, 403, 1008]);
+const WS_PING_INTERVAL_MS = 30000;
 
 function toLocalDateTime(value?: string | null) {
   if (!value) return "";
@@ -110,6 +111,86 @@ function dedupeByMessageId(items: WorkChatMessage[]) {
   return Array.from(map.values()).sort((a, b) => a.id - b.id);
 }
 
+function toUnreadCountDisplay(count: number) {
+  if (!Number.isFinite(count) || count <= 0) return "0";
+  return count > 300 ? "300+" : String(count);
+}
+
+function sortRoomsByRecentMessage(rows: WorkChatRoom[]) {
+  return [...rows].sort((a, b) => {
+    const at = a.last_message_at ? new Date(a.last_message_at).getTime() : 0;
+    const bt = b.last_message_at ? new Date(b.last_message_at).getTime() : 0;
+    if (at !== bt) return bt - at;
+    return b.id - a.id;
+  });
+}
+
+function normalizeIncomingMessage(raw: any): WorkChatMessage | null {
+  const msg = raw?.message ?? raw;
+  const id = Number(msg?.id ?? msg?.message_id ?? 0);
+  const roomId = Number(msg?.room_id ?? 0);
+  if (id <= 0 || roomId <= 0) return null;
+
+  const attachmentRaw = msg?.attachment;
+  return {
+    id,
+    room_id: roomId,
+    sender_type: String(msg?.sender_type ?? "system") as WorkChatMessage["sender_type"],
+    sender_id: msg?.sender_id == null ? null : Number(msg.sender_id),
+    sender_name: msg?.sender_name == null ? null : String(msg.sender_name),
+    message_type: String(msg?.message_type ?? "text") as WorkChatMessage["message_type"],
+    body: msg?.body == null ? null : String(msg.body),
+    is_deleted: Boolean(msg?.is_deleted),
+    created_at: String(msg?.created_at ?? ""),
+    attachment:
+      attachmentRaw && Number(attachmentRaw?.id ?? attachmentRaw?.attachment_id ?? 0) > 0
+        ? {
+            id: Number(attachmentRaw?.id ?? attachmentRaw?.attachment_id ?? 0),
+            message_id: Number(attachmentRaw?.message_id ?? 0),
+            file_name: String(attachmentRaw?.file_name ?? ""),
+            content_type:
+              attachmentRaw?.content_type == null ? null : String(attachmentRaw.content_type),
+            file_size: Number(attachmentRaw?.file_size ?? 0),
+            kind:
+              attachmentRaw?.kind === "image" || attachmentRaw?.kind === "file"
+                ? attachmentRaw.kind
+                : null,
+            is_expired: Boolean(attachmentRaw?.is_expired),
+            expires_at:
+              attachmentRaw?.expires_at == null ? null : String(attachmentRaw.expires_at),
+          }
+        : null,
+  };
+}
+
+function normalizeWsRoomPatch(raw: any): (Partial<WorkChatRoom> & { id: number }) | null {
+  const room = raw?.room ?? raw;
+  const id = Number(room?.id ?? room?.room_id ?? 0);
+  if (id <= 0) return null;
+  const unreadCount = room?.unread_count == null ? undefined : Math.max(0, Number(room.unread_count));
+  return {
+    id,
+    room_type: room?.room_type as WorkChatRoom["room_type"] | undefined,
+    name: room?.name == null ? undefined : String(room.name),
+    display_name: room?.display_name == null ? undefined : String(room.display_name),
+    is_active: room?.is_active == null ? undefined : Boolean(room.is_active),
+    is_hidden: room?.is_hidden == null ? undefined : Boolean(room.is_hidden),
+    is_muted: room?.is_muted == null ? undefined : Boolean(room.is_muted),
+    muted_until: room?.muted_until == null ? null : String(room.muted_until),
+    unread_count: unreadCount,
+    unread_count_display:
+      unreadCount == null
+        ? undefined
+        : typeof room?.unread_count_display === "string"
+          ? room.unread_count_display
+          : toUnreadCountDisplay(unreadCount),
+    last_message_id: room?.last_message_id == null ? undefined : Number(room.last_message_id),
+    last_message_preview:
+      room?.last_message_preview == null ? undefined : String(room.last_message_preview),
+    last_message_at: room?.last_message_at == null ? undefined : String(room.last_message_at),
+  };
+}
+
 function markText(text: string, q: string) {
   const keyword = q.trim();
   if (!keyword) return text;
@@ -158,12 +239,19 @@ export default function CompanyWorkChatLauncher() {
   const [viewerMode, setViewerMode] = useState<"fit" | "original">("fit");
   const [retryAuthTried, setRetryAuthTried] = useState(false);
   const [wsEpoch, setWsEpoch] = useState(0);
+  const [typingLabel, setTypingLabel] = useState<string | null>(null);
+  const [messageMenu, setMessageMenu] = useState<{ x: number; y: number; messageId: number } | null>(null);
+  const [deletingMessageId, setDeletingMessageId] = useState<number | null>(null);
 
   const roomScrollRef = useRef<HTMLDivElement | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const selectedRoomRef = useRef<number | null>(null);
   const wsConnectLockRef = useRef(false);
   const pendingSearchKeywordRef = useRef("");
+  const reconnectRefreshPendingRef = useRef(false);
+  const typingSentRef = useRef(false);
+  const typingStopTimerRef = useRef<number | null>(null);
+  const typingClearTimerRef = useRef<number | null>(null);
 
   const actorType = "company_account";
   const actorId = session?.account_id ?? 0;
@@ -184,16 +272,26 @@ export default function CompanyWorkChatLauncher() {
     return display || "세무사 연결";
   }, [selectedRoom]);
 
+  const discardRoomFromCache = useCallback((roomId: number) => {
+    setRooms((prev) => prev.filter((room) => room.id !== roomId));
+    if (selectedRoomRef.current === roomId) {
+      setSelectedRoomId(null);
+      setMessages([]);
+    }
+  }, []);
+
+  const isRoomAccessError = useCallback(
+    (error: unknown) => error instanceof WorkChatApiError && (error.status === 403 || error.status === 404),
+    []
+  );
+
   const loadRooms = useCallback(async () => {
     setRoomsLoading(true);
     try {
-      const list = await companyWorkChatApi.listRooms({ page: 1, size: 50 });
-      const sorted = [...list.items].sort((a, b) => {
-        const at = a.last_message_at ? new Date(a.last_message_at).getTime() : 0;
-        const bt = b.last_message_at ? new Date(b.last_message_at).getTime() : 0;
-        if (at !== bt) return bt - at;
-        return b.id - a.id;
-      });
+      const list = await companyWorkChatApi.listRooms({ page: 1, size: 50, include_hidden: false });
+      const sorted = sortRoomsByRecentMessage(
+        list.items.filter((row) => row.is_active !== false && !row.is_hidden)
+      );
       setRooms(sorted);
       if (!selectedRoomRef.current && sorted.length > 0) {
         setSelectedRoomId(sorted[0].id);
@@ -233,6 +331,10 @@ export default function CompanyWorkChatLauncher() {
           setMessages(dedupeByMessageId(res.items));
         }
       } catch (e) {
+        if (isRoomAccessError(e)) {
+          discardRoomFromCache(roomId);
+          void loadRooms();
+        }
         const message = e instanceof Error ? e.message : "메시지 조회에 실패했습니다.";
         setErrorMessage(message);
       } finally {
@@ -240,7 +342,7 @@ export default function CompanyWorkChatLauncher() {
         else setMessagesLoading(false);
       }
     },
-    []
+    [discardRoomFromCache, isRoomAccessError, loadRooms]
   );
 
   const handleUnauthorized = useCallback(async () => {
@@ -338,6 +440,74 @@ export default function CompanyWorkChatLauncher() {
     wsRef.current.send(JSON.stringify({ event, data }));
   }, []);
 
+  const applyRoomPatch = useCallback((patch: (Partial<WorkChatRoom> & { id: number }) | null) => {
+    if (!patch) return;
+    if (patch.is_active === false || patch.is_hidden) {
+      setRooms((prev) => prev.filter((room) => room.id !== patch.id));
+      if (selectedRoomRef.current === patch.id) {
+        setSelectedRoomId(null);
+        setMessages([]);
+      }
+      return;
+    }
+
+    setRooms((prev) => {
+      const next = [...prev];
+      const idx = next.findIndex((room) => room.id === patch.id);
+      if (idx >= 0) {
+        const base = next[idx];
+        const unread = patch.unread_count == null ? base.unread_count : patch.unread_count;
+        next[idx] = {
+          ...base,
+          ...patch,
+          unread_count: unread,
+          unread_count_display: patch.unread_count_display || toUnreadCountDisplay(unread),
+        };
+      } else {
+        const unread = Math.max(0, patch.unread_count ?? 0);
+        next.push({
+          id: patch.id,
+          room_type: patch.room_type || "company_bridge",
+          name: patch.name || null,
+          display_name: patch.display_name || patch.name || "세무사 연결",
+          unread_count: unread,
+          unread_count_display: patch.unread_count_display || toUnreadCountDisplay(unread),
+          last_message_preview: patch.last_message_preview || null,
+          last_message_id: patch.last_message_id ?? null,
+          last_message_at: patch.last_message_at || null,
+          is_active: patch.is_active ?? true,
+          is_hidden: Boolean(patch.is_hidden),
+          is_muted: Boolean(patch.is_muted),
+          muted_until: patch.muted_until || null,
+        });
+      }
+      return sortRoomsByRecentMessage(next);
+    });
+  }, []);
+
+  const markReadAndSync = useCallback(
+    async (roomId: number, lastReadMessageId?: number | null) => {
+      try {
+        await companyWorkChatApi.markRead(roomId, lastReadMessageId ?? undefined);
+        sendWsEvent("chat.read", {
+          room_id: roomId,
+          last_read_message_id: lastReadMessageId ?? undefined,
+        });
+      } catch {
+        // noop
+      } finally {
+        setRooms((prev) =>
+          prev.map((room) =>
+            room.id === roomId
+              ? { ...room, unread_count: 0, unread_count_display: "0" }
+              : room
+          )
+        );
+      }
+    },
+    [sendWsEvent]
+  );
+
   useEffect(() => {
     selectedRoomRef.current = selectedRoomId;
   }, [selectedRoomId]);
@@ -354,11 +524,12 @@ export default function CompanyWorkChatLauncher() {
     setSearchRows([]);
     setSearchIndex(-1);
     setActiveSearchMessageId(null);
+    setTypingLabel(null);
     void loadMessages(selectedRoomId);
-    void companyWorkChatApi.markRead(selectedRoomId).catch(() => undefined);
     sendWsEvent("chat.enter_room", { room_id: selectedRoomId });
     sendWsEvent("chat.subscribe", { room_id: selectedRoomId });
-  }, [loadMessages, open, selectedRoomId, sendWsEvent]);
+    void markReadAndSync(selectedRoomId);
+  }, [loadMessages, markReadAndSync, open, selectedRoomId, sendWsEvent]);
 
   useEffect(() => {
     if (!open) {
@@ -379,6 +550,8 @@ export default function CompanyWorkChatLauncher() {
 
     ws.onopen = () => {
       wsConnectLockRef.current = false;
+      reconnectRefreshPendingRef.current = true;
+      void loadRooms();
       if (selectedRoomRef.current) {
         sendWsEvent("chat.subscribe", { room_id: selectedRoomRef.current });
         sendWsEvent("chat.enter_room", { room_id: selectedRoomRef.current });
@@ -391,67 +564,120 @@ export default function CompanyWorkChatLauncher() {
         const eventName = String(payload?.event || payload?.type || "");
         const data = payload?.data ?? payload;
 
-        if (eventName === "chat.message") {
-          const msg = data as WorkChatMessage;
-          if (!msg || Number(msg.id) <= 0) return;
-          const normalized: WorkChatMessage = {
-            ...msg,
-            id: Number(msg.id),
-            room_id: Number(msg.room_id),
-          };
-          setMessages((prev) => dedupeByMessageId([...prev, normalized]));
+        if (eventName === "chat.ws.ready") {
+          if (reconnectRefreshPendingRef.current) {
+            reconnectRefreshPendingRef.current = false;
+            void loadRooms();
+          }
+          return;
+        }
+
+        if (eventName === "chat.error") {
+          const message =
+            typeof data?.message === "string" && data.message.trim()
+              ? data.message
+              : "채팅 처리 중 오류가 발생했습니다.";
+          setErrorMessage(message);
+          return;
+        }
+
+        if (eventName === "chat.room.new" || eventName === "chat.room.bump") {
+          const patch = normalizeWsRoomPatch(data);
+          if (patch) applyRoomPatch(patch);
+          else void loadRooms();
+          return;
+        }
+
+        if (eventName === "chat.read" || eventName === "chat.read.ack") {
+          const roomId = Number(data?.room_id ?? data?.roomId ?? 0);
+          if (roomId <= 0) return;
+          const unread =
+            data?.unread_count == null ? undefined : Math.max(0, Number(data.unread_count));
           setRooms((prev) =>
-            prev
-              .map((r) =>
-                r.id === normalized.room_id
-                  ? {
-                      ...r,
-                      last_message_id: normalized.id,
-                      last_message_preview: normalized.body || normalized.attachment?.file_name || "",
-                      last_message_at: normalized.created_at,
-                      unread_count:
-                        selectedRoomRef.current === normalized.room_id ? 0 : (r.unread_count || 0) + 1,
-                      unread_count_display:
-                        selectedRoomRef.current === normalized.room_id
+            prev.map((room) =>
+              room.id === roomId
+                ? {
+                    ...room,
+                    unread_count:
+                      unread == null
+                        ? data?.actor_type === actorType && Number(data?.actor_id ?? 0) === actorId
+                          ? 0
+                          : room.unread_count
+                        : unread,
+                    unread_count_display:
+                      unread == null
+                        ? data?.actor_type === actorType && Number(data?.actor_id ?? 0) === actorId
                           ? "0"
-                          : String((r.unread_count || 0) + 1),
-                    }
-                  : r
-              )
-              .sort((a, b) => {
-                const at = a.last_message_at ? new Date(a.last_message_at).getTime() : 0;
-                const bt = b.last_message_at ? new Date(b.last_message_at).getTime() : 0;
-                return bt - at;
-              })
+                          : room.unread_count_display
+                        : toUnreadCountDisplay(unread),
+                  }
+                : room
+            )
           );
           return;
         }
 
-        if (eventName === "chat.room.bump") {
+        if (eventName === "chat.typing") {
           const roomId = Number(data?.room_id ?? 0);
-          if (roomId <= 0) return;
-          setRooms((prev) =>
-            prev
-              .map((r) =>
-                r.id === roomId
-                  ? {
-                      ...r,
-                      last_message_id: Number(data?.last_message_id ?? r.last_message_id ?? 0) || r.last_message_id || null,
-                      last_message_preview:
-                        data?.last_message_preview == null
-                          ? r.last_message_preview
-                          : String(data.last_message_preview),
-                      last_message_at:
-                        data?.last_message_at == null ? r.last_message_at : String(data.last_message_at),
-                    }
-                  : r
-              )
-              .sort((a, b) => {
-                const at = a.last_message_at ? new Date(a.last_message_at).getTime() : 0;
-                const bt = b.last_message_at ? new Date(b.last_message_at).getTime() : 0;
-                return bt - at;
-              })
-          );
+          const actorTypeFromWs = String(data?.actor_type || "");
+          const actorIdFromWs = Number(data?.actor_id ?? 0);
+          if (
+            roomId <= 0 ||
+            roomId !== selectedRoomRef.current ||
+            (actorTypeFromWs === actorType && actorIdFromWs === actorId)
+          ) {
+            return;
+          }
+          const isTyping = Boolean(data?.is_typing);
+          if (!isTyping) {
+            setTypingLabel(null);
+            if (typingClearTimerRef.current) {
+              window.clearTimeout(typingClearTimerRef.current);
+              typingClearTimerRef.current = null;
+            }
+            return;
+          }
+          setTypingLabel(`${taxOfficeName} 입력 중...`);
+          if (typingClearTimerRef.current) window.clearTimeout(typingClearTimerRef.current);
+          typingClearTimerRef.current = window.setTimeout(() => setTypingLabel(null), 2500);
+          return;
+        }
+
+        if (eventName === "chat.message") {
+          const normalized = normalizeIncomingMessage(data);
+          if (!normalized) return;
+
+          const isMine = normalized.sender_type === actorType && normalized.sender_id === actorId;
+          const isViewingRoom = selectedRoomRef.current === normalized.room_id;
+
+          if (isViewingRoom) {
+            setMessages((prev) => dedupeByMessageId([...prev, normalized]));
+          }
+
+          let roomExists = false;
+          setRooms((prev) => {
+            const next = prev.map((r) => {
+              if (r.id !== normalized.room_id) return r;
+              roomExists = true;
+              const unreadCount = isViewingRoom || isMine ? 0 : (r.unread_count || 0) + 1;
+              return {
+                ...r,
+                last_message_id: normalized.id,
+                last_message_preview: normalized.body || normalized.attachment?.file_name || "",
+                last_message_at: normalized.created_at,
+                unread_count: unreadCount,
+                unread_count_display: toUnreadCountDisplay(unreadCount),
+              };
+            });
+            return sortRoomsByRecentMessage(next);
+          });
+          if (!roomExists) {
+            void loadRooms();
+          }
+          if (isViewingRoom && !isMine) {
+            void markReadAndSync(normalized.room_id, normalized.id);
+          }
+          return;
         }
       } catch {
         // noop
@@ -479,7 +705,26 @@ export default function CompanyWorkChatLauncher() {
     return () => {
       ws.close();
     };
-  }, [handleUnauthorized, open, sendWsEvent, wsEpoch]);
+  }, [
+    actorId,
+    actorType,
+    applyRoomPatch,
+    handleUnauthorized,
+    loadRooms,
+    markReadAndSync,
+    open,
+    sendWsEvent,
+    taxOfficeName,
+    wsEpoch,
+  ]);
+
+  useEffect(() => {
+    if (!open) return;
+    const timer = window.setInterval(() => {
+      sendWsEvent("chat.ping", {});
+    }, WS_PING_INTERVAL_MS);
+    return () => window.clearInterval(timer);
+  }, [open, sendWsEvent]);
 
   useEffect(() => {
     if (!viewer) return;
@@ -500,13 +745,21 @@ export default function CompanyWorkChatLauncher() {
       const msg = await companyWorkChatApi.sendMessage(selectedRoomId, body);
       setMessages((prev) => dedupeByMessageId([...prev, msg]));
       setMessageBody("");
+      if (typingSentRef.current) {
+        sendWsEvent("chat.typing", { room_id: selectedRoomId, is_typing: false });
+        typingSentRef.current = false;
+      }
     } catch (e) {
+      if (isRoomAccessError(e)) {
+        discardRoomFromCache(selectedRoomId);
+        void loadRooms();
+      }
       const message = e instanceof Error ? e.message : "메시지 전송에 실패했습니다.";
       setErrorMessage(message);
     } finally {
       setSending(false);
     }
-  }, [messageBody, selectedRoomId, sending]);
+  }, [discardRoomFromCache, isRoomAccessError, loadRooms, messageBody, selectedRoomId, sendWsEvent, sending]);
 
   const handleUpload = useCallback(
     async (file: File) => {
@@ -522,13 +775,17 @@ export default function CompanyWorkChatLauncher() {
         const msg = await companyWorkChatApi.uploadAttachment(selectedRoomId, file);
         setMessages((prev) => dedupeByMessageId([...prev, msg]));
       } catch (e) {
+        if (isRoomAccessError(e)) {
+          discardRoomFromCache(selectedRoomId);
+          void loadRooms();
+        }
         const message = e instanceof Error ? e.message : "파일 업로드에 실패했습니다.";
         setErrorMessage(message);
       } finally {
         setUploading(false);
       }
     },
-    [selectedRoomId, uploading]
+    [discardRoomFromCache, isRoomAccessError, loadRooms, selectedRoomId, uploading]
   );
 
   const markMessageExpired = useCallback((attachmentId: number) => {
@@ -617,6 +874,82 @@ export default function CompanyWorkChatLauncher() {
     },
     [actorId, taxOfficeName]
   );
+
+  const handleMessageInputChange = useCallback(
+    (nextValue: string) => {
+      setMessageBody(nextValue);
+      if (!selectedRoomId) return;
+      if (!typingSentRef.current) {
+        sendWsEvent("chat.typing", { room_id: selectedRoomId, is_typing: true });
+        typingSentRef.current = true;
+      }
+      if (typingStopTimerRef.current) window.clearTimeout(typingStopTimerRef.current);
+      typingStopTimerRef.current = window.setTimeout(() => {
+        if (!typingSentRef.current) return;
+        sendWsEvent("chat.typing", { room_id: selectedRoomId, is_typing: false });
+        typingSentRef.current = false;
+      }, 1200);
+    },
+    [selectedRoomId, sendWsEvent]
+  );
+
+  const handleDeleteMessage = useCallback(
+    async (messageId: number) => {
+      if (deletingMessageId) return;
+      setDeletingMessageId(messageId);
+      setMessageMenu(null);
+      try {
+        await companyWorkChatApi.deleteMessage(messageId);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id !== messageId
+              ? msg
+              : {
+                  ...msg,
+                  is_deleted: true,
+                  body: "삭제된 메시지입니다.",
+                  attachment: null,
+                }
+          )
+        );
+      } catch (e) {
+        const message = e instanceof Error ? e.message : "메시지 삭제에 실패했습니다.";
+        setErrorMessage(message);
+      } finally {
+        setDeletingMessageId(null);
+      }
+    },
+    [deletingMessageId]
+  );
+
+  useEffect(() => {
+    if (!open || !selectedRoomId) return;
+    return () => {
+      if (typingSentRef.current) {
+        sendWsEvent("chat.typing", { room_id: selectedRoomId, is_typing: false });
+        typingSentRef.current = false;
+      }
+      if (typingStopTimerRef.current) {
+        window.clearTimeout(typingStopTimerRef.current);
+        typingStopTimerRef.current = null;
+      }
+      if (typingClearTimerRef.current) {
+        window.clearTimeout(typingClearTimerRef.current);
+        typingClearTimerRef.current = null;
+      }
+    };
+  }, [open, selectedRoomId, sendWsEvent]);
+
+  useEffect(() => {
+    if (!messageMenu) return;
+    const close = () => setMessageMenu(null);
+    window.addEventListener("click", close);
+    window.addEventListener("scroll", close, true);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("scroll", close, true);
+    };
+  }, [messageMenu]);
 
   return (
     <>
@@ -796,6 +1129,17 @@ export default function CompanyWorkChatLauncher() {
                       const att = msg.attachment || null;
                       const expired = Boolean(att?.is_expired) || msg.body === "만료된 파일입니다.";
                       const marked = activeSearchMessageId === msg.id && searchKeyword.trim().length > 0;
+                      const isSystem = msg.sender_type === "system" || msg.message_type === "system";
+
+                      if (isSystem) {
+                        return (
+                          <div key={msg.id} className="flex justify-center">
+                            <div className="rounded-full bg-zinc-200 px-3 py-1 text-xs text-zinc-700">
+                              {msg.body || "시스템 메시지"}
+                            </div>
+                          </div>
+                        );
+                      }
 
                       return (
                         <div
@@ -804,6 +1148,11 @@ export default function CompanyWorkChatLauncher() {
                           className={`flex ${mine ? "justify-end" : "justify-start"}`}
                         >
                           <div
+                            onContextMenu={(e) => {
+                              if (!mine || msg.is_deleted) return;
+                              e.preventDefault();
+                              setMessageMenu({ x: e.clientX, y: e.clientY, messageId: msg.id });
+                            }}
                             className={`max-w-[78%] rounded-xl px-3 py-2 ${
                               mine ? "bg-neutral-900 text-white" : "bg-white text-zinc-900"
                             } ${marked ? "ring-2 ring-yellow-300" : ""}`}
@@ -848,11 +1197,23 @@ export default function CompanyWorkChatLauncher() {
                                 {markText(String(msg.body || ""), searchKeyword)}
                               </div>
                             )}
+                            {mine ? (
+                              <div className={`mt-1 text-right text-[10px] ${mine ? "text-neutral-300" : "text-zinc-500"}`}>
+                                {selectedRoom?.unread_count === 0 ? "읽음" : "전송됨"}
+                              </div>
+                            ) : null}
                           </div>
                         </div>
                       );
                     })
                   )}
+                  {typingLabel ? (
+                    <div className="flex justify-start">
+                      <div className="rounded-md bg-white px-3 py-1 text-xs text-zinc-500 shadow-sm">
+                        {typingLabel}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               )}
             </div>
@@ -873,7 +1234,7 @@ export default function CompanyWorkChatLauncher() {
                 </label>
                 <input
                   value={messageBody}
-                  onChange={(e) => setMessageBody(e.target.value)}
+                  onChange={(e) => handleMessageInputChange(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
@@ -886,7 +1247,7 @@ export default function CompanyWorkChatLauncher() {
                 <button
                   type="button"
                   onClick={() => void handleSendMessage()}
-                  disabled={sending || !messageBody.trim() || !selectedRoomId}
+                  disabled={sending || !messageBody.trim() || !selectedRoomId || selectedRoom?.is_active === false}
                   className="inline-flex h-9 items-center gap-1 rounded-md bg-neutral-900 px-3 text-xs font-medium text-white disabled:opacity-50"
                 >
                   <SendHorizontal className="h-3.5 w-3.5" />
@@ -898,6 +1259,22 @@ export default function CompanyWorkChatLauncher() {
               ) : null}
             </div>
           </section>
+        </div>
+      ) : null}
+
+      {messageMenu ? (
+        <div
+          className="fixed z-50 min-w-[120px] rounded-md border border-zinc-200 bg-white p-1 shadow-lg"
+          style={{ left: messageMenu.x, top: messageMenu.y }}
+        >
+          <button
+            type="button"
+            onClick={() => void handleDeleteMessage(messageMenu.messageId)}
+            disabled={deletingMessageId === messageMenu.messageId}
+            className="w-full rounded px-2 py-1.5 text-left text-xs text-rose-600 hover:bg-rose-50 disabled:opacity-50"
+          >
+            {deletingMessageId === messageMenu.messageId ? "삭제 중..." : "메시지 삭제"}
+          </button>
         </div>
       ) : null}
 
