@@ -9,7 +9,7 @@ export const metadata = {
   openGraph: {
     title: '자주 묻는 질문 | 디케빈즈택스랩',
     description: '고객들이 자주 묻는 질문을 통해 세무 서비스에 대한 궁금증을 해결해보세요.',
-    url: 'https://thekevinstaxlab.com/customer/faq',
+    url: 'https://thekevinstaxlab.com/faq',
     siteName: 'thekevinstaxlab',
     images: [
       {

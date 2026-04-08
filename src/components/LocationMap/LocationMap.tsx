@@ -36,14 +36,14 @@ export default function LocationMap() {
     infowindowContent.className = 'font-sans text-[12px] text-left leading-relaxed p-2';
     infowindowContent.style.display = 'none';
     infowindowContent.innerHTML = `
-      <div style="padding: 8px; min-width: 260px;">
+      <div style="padding: 8px; min-width: 260px; max-width: 360px; white-space: normal; word-break: keep-all;">
         <a href="https://map.kakao.com/link/search/${encodeURIComponent(officeAddress)}"
            target="_blank" rel="noopener noreferrer" class="block mb-4">
           <img src="/logo.png" alt="디 케빈즈 택스랩" class="w-[120px] h-auto mb-1" />
         </a>
         <div class="font-bold text-black">${officeName}</div>
         <div class="text-gray-500">${officeAddress}</div>
-        <div class="text-gray-500" style="white-space: nowrap;">(우) ${officePostalCode} &nbsp; (지번) ${officeLotNumberAddress}</div>
+        <div class="text-gray-500">(우) ${officePostalCode} / (지번) ${officeLotNumberAddress}</div>
       </div>
     `;
     document.body.appendChild(infowindowContent);

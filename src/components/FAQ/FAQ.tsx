@@ -160,7 +160,9 @@ export default function FAQ() {
             </button>
             <div
               ref={(el) => (answerRefs.current[index] = el)}
-              className="overflow-hidden text-gray-700 text-sm sm:text-base leading-relaxed mt-6 pt-5 border-t border-gray-100 space-y-4"
+              className={`overflow-hidden text-gray-700 text-sm sm:text-base leading-relaxed space-y-4 ${
+                openIndex === index ? 'mt-6 pt-5 border-t border-gray-100' : 'mt-0 pt-0 border-t-0'
+              }`}
               style={{ height: openIndex === index ? 'auto' : 0 }}
             >
               {openIndex === index && item.answer}
