@@ -11,6 +11,11 @@ declare global {
 
 export default function LocationMap() {
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [mapCenter, setMapCenter] = useState({ lat: 37.4882834285316, lng: 127.122189149996 });
+  const officeName = '디 케빈즈 택스랩';
+  const officeAddress = '경기도 성남시 수정구 위례서로 24, 행복빌딩 5층 502호';
+  const officePostalCode = '13647';
+  const officeLotNumberAddress = '창곡동 557-3';
   // Removed useRouter for App Router compatibility
 
   // Fallback: If window.kakao.maps exists but scriptLoaded is still false, trigger maps.load
@@ -36,9 +41,9 @@ export default function LocationMap() {
            target="_blank" rel="noopener noreferrer" class="block mb-4">
           <img src="/logo.png" alt="디 케빈즈 택스랩" class="w-[120px] h-auto mb-1" />
         </a>
-        <div class="font-bold text-black">디 케빈즈 택스랩</div>
-        <div class="text-gray-500">서울 송파구 송파대로22길 5-20</div>
-        <div class="text-gray-500" style="white-space: nowrap;">(우) 05805 &nbsp; (지번) 문정동 53-13</div>
+        <div class="font-bold text-black">${officeName}</div>
+        <div class="text-gray-500">${officeAddress}</div>
+        <div class="text-gray-500" style="white-space: nowrap;">(우) ${officePostalCode} &nbsp; (지번) ${officeLotNumberAddress}</div>
       </div>
     `;
     document.body.appendChild(infowindowContent);
@@ -48,14 +53,14 @@ export default function LocationMap() {
     if (!container || !contentEl) return;
 
     const options = {
-      center: new window.kakao.maps.LatLng(37.4882834285316, 127.122189149996),
+      center: new window.kakao.maps.LatLng(mapCenter.lat, mapCenter.lng),
       level: 3,
     };
     const map = new window.kakao.maps.Map(container, options);
     const marker = new window.kakao.maps.Marker({
       position: options.center,
       map,
-      title: '디 케빈즈 택스랩',
+      title: officeName,
     });
     const infowindow = new window.kakao.maps.InfoWindow({
       content: contentEl.innerHTML,
@@ -67,6 +72,22 @@ export default function LocationMap() {
       map.setCenter(options.center);
     });
 
+    if (window.kakao.maps.services) {
+      const geocoder = new window.kakao.maps.services.Geocoder();
+      geocoder.addressSearch(officeAddress, (result: any[], status: string) => {
+        if (status === window.kakao.maps.services.Status.OK && result[0]) {
+          const next = {
+            lat: Number(result[0].y),
+            lng: Number(result[0].x),
+          };
+          const nextCenter = new window.kakao.maps.LatLng(next.lat, next.lng);
+          marker.setPosition(nextCenter);
+          map.setCenter(nextCenter);
+          setMapCenter(next);
+        }
+      });
+    }
+
     return () => {
       document.body.removeChild(infowindowContent);
     };
@@ -76,7 +97,7 @@ export default function LocationMap() {
   return (
     <>
       <Script
-        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY}&autoload=false`}
+        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY}&autoload=false&libraries=services`}
         strategy="afterInteractive"
         onLoad={() => {
           console.log('[KAKAO] Script loaded ✅');
@@ -111,7 +132,7 @@ export default function LocationMap() {
             </a>
             <div className="text-xs space-x-2">
               <a
-                href="https://map.kakao.com/?from=roughmap&q=디%20케빈즈%20택스%20랩&map_type=TYPE_MAP&urlX=127.122150&urlY=37.488268"
+                href={`https://map.kakao.com/link/search/${encodeURIComponent(officeAddress)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="로드뷰"
@@ -120,7 +141,7 @@ export default function LocationMap() {
                 로드뷰
               </a>
               <a
-                href="https://map.kakao.com/?from=roughmap&q=디%20케빈즈%20택스%20랩&map_type=TYPE_MAP&urlX=127.122150&urlY=37.488268"
+                href={`https://map.kakao.com/link/to/${encodeURIComponent(officeName)},${mapCenter.lat},${mapCenter.lng}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="길찾기"
@@ -129,7 +150,7 @@ export default function LocationMap() {
                 길찾기
               </a>
               <a
-                href="https://map.kakao.com/?from=roughmap&q=디%20케빈즈%20택스%20랩&map_type=TYPE_MAP&urlX=127.122150&urlY=37.488268"
+                href={`https://map.kakao.com/link/search/${encodeURIComponent(officeAddress)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="지도 크게 보기"
@@ -143,19 +164,21 @@ export default function LocationMap() {
 
         {/* 안내 정보 (우측) */}
         <div className="md:col-span-2 bg-white rounded border border-gray-200 p-4 sm:p-5 md:p-6 leading-relaxed h-full">
-          <p className="text-xs tracking-widest text-gray-400 bg-gray-100 inline-block px-2 py-1 rounded mb-2">LOCATION</p>
           <h2 className="text-base font-semibold text-gray-900 mb-4">주소</h2>
           <p>
-            서울 송파구 송파대로22길 5-20,<br />
-            1층 101호
+            경기도 성남시 수정구 위례서로 24,<br />
+            행복빌딩 5층 502호
+          </p>
+          <p className="mt-2 text-gray-600">
+            (우) 13647<br />
+            (지번) 창곡동 557-3
           </p>
 
-          <h2 className="text-base font-semibold text-gray-900 mt-6 mb-2">지하철 이용 시</h2>
+          <h2 className="text-base font-semibold text-gray-900 mt-6 mb-2">방문 안내</h2>
           <ul className="space-y-1">
-            <li>문정역 1번 출구 기준 도보 약 3분 (약 213m)</li>
-            <li>1번 출구 → 약 100m 직진</li>
-            <li>첫 골목 우회전 → 약 50m 이동</li>
-            <li>송파대로22길 좌회전 → 약 100m 직진</li>
+            <li>건물명: 행복빌딩</li>
+            <li>층/호수: 5층 502호</li>
+            <li>정확한 동선은 하단 길찾기 버튼을 이용해 주세요.</li>
           </ul>
 
           <h2 className="text-base font-semibold text-gray-900 mt-6 mb-2">영업시간</h2>
@@ -166,7 +189,7 @@ export default function LocationMap() {
 
           <div className="mt-5 text-right">
             <a
-              href="https://map.kakao.com/link/to/THE KEVIN'S TAX LAB,37.488268,127.122150"
+              href={`https://map.kakao.com/link/to/${encodeURIComponent(officeName)},${mapCenter.lat},${mapCenter.lng}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-700 text-sm underline hover:text-gray-900"

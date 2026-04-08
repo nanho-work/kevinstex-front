@@ -4,11 +4,11 @@ import LocationMap from '@/components/LocationMap/LocationMap';
 
 export const metadata = {
   title: '오시는 길 | 디케빈즈택스랩',
-  description: '서울 송파구 문정역 도보 3분 거리! 디케빈즈택스랩 오시는 길 안내입니다.',
-  keywords: ['오시는길', '디케빈즈택스랩 위치', '송파세무사 위치', '문정역 세무사'],
+  description: '경기도 성남시 수정구 위례서로 24, 행복빌딩 5층 502호. 디케빈즈택스랩 오시는 길 안내입니다.',
+  keywords: ['오시는길', '디케빈즈택스랩 위치', '성남세무사 위치', '위례 세무사'],
   openGraph: {
     title: '오시는 길 | 디케빈즈택스랩',
-    description: '문정역에서 도보 3분 거리, 주차 가능. 디케빈즈택스랩의 정확한 위치를 확인하세요.',
+    description: '경기도 성남시 수정구 위례서로 24, 행복빌딩 5층 502호. 디케빈즈택스랩의 정확한 위치를 확인하세요.',
     url: 'https://thekevinstaxlab.com/location',
     siteName: 'thekevinstaxlab',
     images: [

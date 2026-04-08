@@ -1,6 +1,6 @@
 // services/kakaoService.ts
 export const fetchAddressCoords = async () => {
-  const query = "송파대로22길 5-20";
+  const query = "경기도 성남시 수정구 위례서로 24, 행복빌딩 5층 502호";
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/kakao/search-address?query=${encodeURIComponent(query)}`);
   if (!res.ok) throw new Error("주소 검색 실패");
   const data = await res.json();
