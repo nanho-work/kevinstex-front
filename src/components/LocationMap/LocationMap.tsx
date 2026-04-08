@@ -37,7 +37,7 @@ export default function LocationMap() {
     infowindowContent.style.display = 'none';
     infowindowContent.innerHTML = `
       <div style="padding: 8px; min-width: 260px;">
-        <a href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202508041518&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
+        <a href="https://map.kakao.com/link/search/${encodeURIComponent(officeAddress)}"
            target="_blank" rel="noopener noreferrer" class="block mb-4">
           <img src="/logo.png" alt="디 케빈즈 택스랩" class="w-[120px] h-auto mb-1" />
         </a>
@@ -69,7 +69,7 @@ export default function LocationMap() {
     infowindow.open(map, marker);
     window.kakao.maps.event.addListener(marker, 'click', () => {
       infowindow.open(map, marker);
-      map.setCenter(options.center);
+      map.setCenter(marker.getPosition());
     });
 
     if (window.kakao.maps.services) {
