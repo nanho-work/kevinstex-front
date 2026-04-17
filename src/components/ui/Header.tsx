@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Button from './Button'
+import { KAKAO_CHAT_URL, NAVER_RESERVATION_URL } from '@/constants/externalLinks'
 
 const prefix = ''
 
@@ -81,7 +82,7 @@ export default function Header() {
         {/* 상담 버튼 (Desktop) */}
         <div className="hidden md:flex items-center gap-3 lg:gap-4 justify-end">
           <Button
-            href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/ticket?fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9&fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
+            href={NAVER_RESERVATION_URL}
             target="_blank"
             rel="noopener noreferrer"
             variant="outline"
@@ -90,7 +91,7 @@ export default function Header() {
             바로예약
           </Button>
           <Button
-            href="https://pf.kakao.com/_qJhkn/chat"
+            href={KAKAO_CHAT_URL}
             target="_blank"
             rel="noopener noreferrer"
             variant="outline"

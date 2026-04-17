@@ -1,5 +1,6 @@
 // src/app/customer/faq/page.tsx
 import FAQ from '@/components/FAQ/FAQ';
+import { SITE_NAME, SITE_URL } from '@/constants/siteConfig';
 
 
 export const metadata = {
@@ -9,11 +10,11 @@ export const metadata = {
   openGraph: {
     title: '자주 묻는 질문 | 디케빈즈택스랩',
     description: '고객들이 자주 묻는 질문을 통해 세무 서비스에 대한 궁금증을 해결해보세요.',
-    url: 'https://thekevinstaxlab.com/faq',
-    siteName: 'thekevinstaxlab',
+    url: `${SITE_URL}/faq`,
+    siteName: SITE_NAME,
     images: [
       {
-        url: 'https://thekevinstaxlab.com/faq_og.png',
+        url: `${SITE_URL}/faq_og.png`,
         width: 1200,
         height: 630,
         alt: '자주 묻는 질문 이미지',

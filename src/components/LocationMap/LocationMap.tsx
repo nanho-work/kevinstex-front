@@ -2,6 +2,7 @@
 
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
+import { OFFICE_ADDRESS, OFFICE_LOT_NUMBER, OFFICE_NAME, OFFICE_POSTAL_CODE } from '@/constants/siteConfig';
 
 declare global {
   interface Window {
@@ -12,10 +13,10 @@ declare global {
 export default function LocationMap() {
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [mapCenter, setMapCenter] = useState({ lat: 37.4882834285316, lng: 127.122189149996 });
-  const officeName = '디 케빈즈 택스랩';
-  const officeAddress = '경기도 성남시 수정구 위례서로 24, 행복빌딩 5층 502호';
-  const officePostalCode = '13647';
-  const officeLotNumberAddress = '창곡동 557-3';
+  const officeName = OFFICE_NAME;
+  const officeAddress = OFFICE_ADDRESS;
+  const officePostalCode = OFFICE_POSTAL_CODE;
+  const officeLotNumberAddress = OFFICE_LOT_NUMBER;
   // Removed useRouter for App Router compatibility
 
   // Fallback: If window.kakao.maps exists but scriptLoaded is still false, trigger maps.load
@@ -165,13 +166,10 @@ export default function LocationMap() {
         {/* 안내 정보 (우측) */}
         <div className="md:col-span-2 bg-white rounded border border-gray-200 p-4 sm:p-5 md:p-6 leading-relaxed h-full">
           <h2 className="text-base font-semibold text-gray-900 mb-4">주소</h2>
-          <p>
-            경기도 성남시 수정구 위례서로 24,<br />
-            행복빌딩 5층 502호
-          </p>
+          <p>{officeAddress}</p>
           <p className="mt-2 text-gray-600">
-            (우) 13647<br />
-            (지번) 창곡동 557-3
+            (우) {officePostalCode}<br />
+            (지번) {officeLotNumberAddress}
           </p>
 
           <h2 className="text-base font-semibold text-gray-900 mt-6 mb-2">방문 안내</h2>

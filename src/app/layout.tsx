@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import AppShell from '@/components/ui/AppShell'
+import { OG_DEFAULT_IMAGE_URL, SITE_NAME, SITE_URL } from '@/constants/siteConfig'
 
 const prefix = ''
 
@@ -21,21 +22,21 @@ export const metadata: Metadata = {
     '절세',
     '세무사',
   ],
-  authors: [{ name: 'KevinTax', url: 'https://thekevinstaxlab.com' }],
+  authors: [{ name: 'KevinTax', url: SITE_URL }],
   creator: 'KevinTax',
   publisher: 'KevinTax',
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
   alternates: {
-    canonical: 'https://thekevinstaxlab.com',
+    canonical: SITE_URL,
   },
   openGraph: {
     title: '디케빈즈택스랩 | 대한민국 No.1 세무서비스',
     description: '세무 전문가의 종합 솔루션을 KEVIN TAX에서 경험하세요',
-    url: 'https://thekevinstaxlab.com',
-    siteName: 'thekevinstaxlab',
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [
       {
-        url: 'https://thekevinstaxlab.com/kwon_profile.png',
+        url: OG_DEFAULT_IMAGE_URL,
         width: 1200,
         height: 630,
         alt: 'KevinTax 대표 이미지',

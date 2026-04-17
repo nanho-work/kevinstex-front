@@ -1,5 +1,6 @@
 'use client'
 
+import { NAVER_RESERVATION_URL } from '@/constants/externalLinks'
 
 const prefix = ''
 
@@ -30,7 +31,7 @@ export default function Hero() {
             </span>
           </p>
           <a
-            href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/ticket?fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9&fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
+            href={NAVER_RESERVATION_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block text-white px-3 py-2 sm:px-4 sm:py-2.5 text-sm sm:text-base rounded-lg shadow bg-gradient-to-r from-blue-800 to-blue-400 hover:from-blue-900 hover:to-blue-500 transition text-center w-fit"

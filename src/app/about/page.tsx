@@ -1,6 +1,7 @@
 
 
 import About from '@/components/about/About';
+import { OG_DEFAULT_IMAGE_URL, SITE_NAME, SITE_URL } from '@/constants/siteConfig';
 
 export const metadata = {
   title: '회사소개 | 디케빈즈택스랩',
@@ -9,11 +10,11 @@ export const metadata = {
   openGraph: {
     title: '회사소개 | 디케빈즈택스랩',
     description: '대한민국 No.1 세무서비스, 디케빈즈택스랩의 철학과 가치를 소개합니다.',
-    url: 'https://thekevinstaxlab.com/about',
-    siteName: 'thekevinstaxlab',
+    url: `${SITE_URL}/about`,
+    siteName: SITE_NAME,
     images: [
       {
-        url: 'https://thekevinstaxlab.com/kwon_profile.png',
+        url: OG_DEFAULT_IMAGE_URL,
         width: 1200,
         height: 630,
         alt: '회사소개 이미지',

@@ -1,4 +1,6 @@
 /* components/Footer.tsx */
+import { CONTACT_PHONE } from '@/constants/siteConfig'
+
 export default function Footer() {
   return (
     <footer className="bg-gray-100 w-full">
@@ -9,7 +11,7 @@ export default function Footer() {
       <p className="text-sm text-gray-700">세무 기장 및 세금 신고</p>
       <p className="text-sm text-gray-700">대표자: 권도윤</p>
       <p className="text-sm text-gray-700">사업자등록번호: 111-14-63812</p>
-      <p className="text-sm text-gray-700">전화: 031-751-0601</p>
+      <p className="text-sm text-gray-700">전화: {CONTACT_PHONE}</p>
       <p className="text-sm text-gray-700">이메일: akathekevin@thekevinstaxlab.com</p>
     </div>
 
