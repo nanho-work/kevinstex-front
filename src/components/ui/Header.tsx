@@ -81,7 +81,7 @@ export default function Header() {
         {/* 상담 버튼 (Desktop) */}
         <div className="hidden md:flex items-center gap-3 lg:gap-4 justify-end">
           <Button
-            href="https://map.naver.com/p/entry/place/1166913410..."
+            href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/ticket?fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9&fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
             target="_blank"
             rel="noopener noreferrer"
             variant="outline"

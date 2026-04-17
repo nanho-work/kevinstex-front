@@ -17,7 +17,7 @@ export default function FloatingButton() {
 
       {/* 상담 신청하기 */}
       <a
-        href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/ticket?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202507060007&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
+        href="https://map.naver.com/p/search/%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9/place/1166913410?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/ticket?fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9&fromPanelNum=1&additionalHeight=76&timestamp=202604171357&locale=ko&svcName=map_pcv5&searchText=%EB%94%94%EC%BC%80%EB%B9%88%EC%A6%88%ED%83%9D%EC%8A%A4%EB%9E%A9"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center w-24 h-16 border-b border-[#D1D5DB] hover:bg-[#EDF2F7]"
