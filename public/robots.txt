@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://www.thekevinstaxlab.com
+Host: https://thekevinstaxlab.com
 
 # Sitemaps
-Sitemap: https://www.thekevinstaxlab.com/sitemap.xml
+Sitemap: https://thekevinstaxlab.com/sitemap.xml
