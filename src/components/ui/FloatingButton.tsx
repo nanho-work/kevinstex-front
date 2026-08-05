@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { FaCommentDots, FaYoutube, FaArrowUp } from 'react-icons/fa';
+import Image from 'next/image';
+import { FaYoutube } from 'react-icons/fa';
 import { PenLine } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { KAKAO_CHAT_URL, NAVER_RESERVATION_URL, YOUTUBE_CHANNEL_URL } from '@/constants/externalLinks';
@@ -9,7 +9,7 @@ import { KAKAO_CHAT_URL, NAVER_RESERVATION_URL, YOUTUBE_CHANNEL_URL } from '@/co
 export default function FloatingButton() {
   const pathname = usePathname();
 
-  if (pathname.startsWith('/solution')) {
+  if (pathname === '/' || pathname.startsWith('/solution')) {
     return null;
   }
 
@@ -32,7 +32,7 @@ export default function FloatingButton() {
       {/* 카카오톡 상담 */}
       <a href={KAKAO_CHAT_URL} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-24 h-16 border-b border-[#D1D5DB] hover:bg-[#EDF2F7]">
         <div className="flex flex-col items-center text-[#2563eb]">
-          <img src="/kakao-talk.png" alt="KakaoTalk" className="w-5 h-5 mb-1" />
+          <Image src="/kakao-talk.png" alt="KakaoTalk" width={20} height={20} className="mb-1 h-5 w-5" />
           <span className="text-xs">카톡상담</span>
         </div>
       </a>
