@@ -2,6 +2,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Button from './Button'
@@ -15,14 +16,16 @@ export default function Header() {
   const pathname = usePathname()
 
   return (
-    <header className="w-full h-24 bg-white shadow-sm sticky top-0 z-50">
-      <div className="mx-auto max-w-8xl h-24 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+    <header className="sticky top-0 z-50 h-20 w-full bg-white shadow-sm md:h-24">
+      <div className="mx-auto flex h-20 max-w-8xl items-center justify-between px-4 sm:px-6 md:h-24 lg:px-8">
         {/* 로고 */}
         <Link href="/" className="flex items-center space-x-2">
-          <img
+          <Image
             src={`${prefix}/logo.png`}
             alt="로고"
-            className="w-36 h-12 md:w-40 md:h-14 lg:w-44 lg:h-16 object-contain"
+            width={176}
+            height={48}
+            className="h-10 w-32 object-contain md:h-14 md:w-40 lg:h-16 lg:w-44"
           />
         </Link>
 

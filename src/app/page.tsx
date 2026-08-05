@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 import {
   ArrowRight,
   ArrowUpRight,
-  BookOpenText,
   BriefcaseBusiness,
   Building2,
   Calculator,
@@ -22,6 +22,8 @@ import {
   UserRoundCheck,
 } from 'lucide-react'
 import Hero from '@/components/main/Hero'
+import HomeInsightCarousel from '@/components/main/HomeInsightCarousel'
+import ProcessTimeline from '@/components/main/ProcessTimeline'
 import {
   KAKAO_CHAT_URL,
   NAVER_RESERVATION_URL,
@@ -70,7 +72,7 @@ type ServiceCard = {
   icon: LucideIcon
   eyebrow: string
   title: string
-  description: string
+  description: readonly string[]
   items: readonly string[]
 }
 
@@ -79,28 +81,44 @@ const serviceCards: readonly ServiceCard[] = [
     icon: BriefcaseBusiness,
     eyebrow: 'START',
     title: '사업을 시작할 때',
-    description: '사업자등록부터 법인 전환 검토까지, 시작 단계의 세무 구조를 함께 살펴봅니다.',
+    description: [
+      '사업자등록부터 법인 전환 검토까지,',
+      '시작 단계의 세무 구조를',
+      '함께 살펴봅니다.',
+    ],
     items: ['사업자등록', '창업 세무 안내', '법인 전환 검토'],
   },
   {
     icon: Calculator,
     eyebrow: 'MANAGE',
     title: '매월 관리가 필요할 때',
-    description: '장부와 세무 일정을 체계적으로 관리해 대표님이 본업에 집중할 수 있게 돕습니다.',
+    description: [
+      '장부와 세무 일정을',
+      '체계적으로 관리해 대표님이',
+      '본업에 집중할 수 있게 돕습니다.',
+    ],
     items: ['기장 대리', '부가가치세', '원천세 관리'],
   },
   {
     icon: FileCheck2,
     eyebrow: 'REPORT',
     title: '정기 신고가 다가올 때',
-    description: '신고 대상과 필요한 자료를 먼저 정리하고, 빠뜨리는 항목 없이 진행합니다.',
+    description: [
+      '신고 대상과 필요한 자료를',
+      '먼저 정리하고, 빠뜨리는 항목 없이',
+      '진행합니다.',
+    ],
     items: ['종합소득세', '법인세', '각종 세금 신고'],
   },
   {
     icon: Landmark,
     eyebrow: 'ASSET',
     title: '재산을 이전할 때',
-    description: '거래와 가족 상황을 함께 살펴 양도·상속·증여의 쟁점을 이해하기 쉽게 설명합니다.',
+    description: [
+      '거래와 가족 상황을 함께 살펴',
+      '양도·상속·증여의 쟁점을',
+      '이해하기 쉽게 설명합니다.',
+    ],
     items: ['양도소득세', '상속세', '증여세'],
   },
 ]
@@ -207,19 +225,29 @@ function SectionHeading({
   eyebrow,
   title,
   description,
+  wide = false,
+  singleLineOnDesktop = false,
 }: {
   eyebrow: string
-  title: string
+  title: ReactNode
   description?: string
+  wide?: boolean
+  singleLineOnDesktop?: boolean
 }) {
   return (
-    <div className="max-w-2xl">
+    <div className={wide ? 'max-w-none' : 'max-w-2xl'}>
       <p className="text-xs font-bold tracking-[0.2em] text-[#4779bf]">{eyebrow}</p>
-      <h2 className="mt-4 text-3xl font-bold leading-tight tracking-[-0.035em] text-[#10243f] sm:text-4xl lg:text-[2.7rem]">
+      <h2
+        className={`mt-3 break-keep text-[1.8rem] font-bold leading-[1.22] tracking-[-0.035em] text-[#10243f] sm:mt-4 sm:text-4xl ${
+          singleLineOnDesktop
+            ? 'xl:whitespace-nowrap xl:text-[2.45rem]'
+            : 'lg:text-[2.7rem]'
+        }`}
+      >
         {title}
       </h2>
       {description ? (
-        <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">{description}</p>
+        <p className="mt-4 break-keep text-[0.95rem] leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">{description}</p>
       ) : null}
     </div>
   )
@@ -230,43 +258,50 @@ export default function Home() {
     <>
       <script type="application/ld+json">{JSON.stringify(localBusinessSchema)}</script>
 
-      <div className="bg-[#fbfaf7] pb-28 text-[#10243f] md:pb-0">
+      <div className="break-keep bg-[#fbfaf7] pb-28 text-[#10243f] md:pb-0">
         <Hero />
 
         <section
           aria-label="디 케빈즈 택스랩 상담 안내"
-          className="relative z-10 mx-3 -mt-7 rounded-[1.5rem] border border-slate-200/80 bg-white px-5 py-6 shadow-[0_18px_50px_rgba(16,36,63,0.1)] sm:mx-8 sm:px-8 lg:mx-12"
+          className="relative z-10 mx-2 -mt-5 rounded-[1.25rem] border border-slate-200/80 bg-white px-4 py-5 shadow-[0_18px_50px_rgba(16,36,63,0.1)] sm:mx-8 sm:-mt-7 sm:rounded-[1.5rem] sm:px-8 sm:py-6 lg:mx-12"
         >
-          <ul className="grid grid-cols-2 gap-x-5 gap-y-6 lg:grid-cols-4 lg:divide-x lg:divide-slate-200">
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-5 lg:grid-cols-4 lg:divide-x lg:divide-slate-200">
             <li className="lg:px-5">
               <CircleCheckBig className="h-5 w-5 text-[#4779bf]" aria-hidden="true" />
-              <p className="mt-3 text-sm font-bold text-[#10243f]">1:1 세무 상담</p>
+              <p className="mt-2 text-sm font-bold text-[#10243f] sm:mt-3">1:1 세무 상담</p>
               <p className="mt-1 text-xs leading-5 text-slate-500">상황부터 차근차근 확인</p>
             </li>
             <li className="lg:px-5">
               <MapPin className="h-5 w-5 text-[#4779bf]" aria-hidden="true" />
-              <p className="mt-3 text-sm font-bold text-[#10243f]">성남 위례 사무실</p>
+              <p className="mt-2 text-sm font-bold text-[#10243f] sm:mt-3">성남 위례 사무실</p>
               <p className="mt-1 text-xs leading-5 text-slate-500">방문 상담 가능</p>
             </li>
             <li className="lg:px-5">
               <Building2 className="h-5 w-5 text-[#4779bf]" aria-hidden="true" />
-              <p className="mt-3 text-sm font-bold text-[#10243f]">개인·법인 사업자</p>
+              <p className="mt-2 text-sm font-bold text-[#10243f] sm:mt-3">개인·법인 사업자</p>
               <p className="mt-1 text-xs leading-5 text-slate-500">사업 단계에 맞춘 업무</p>
             </li>
             <li className="lg:px-5">
               <Clock3 className="h-5 w-5 text-[#4779bf]" aria-hidden="true" />
-              <p className="mt-3 text-sm font-bold text-[#10243f]">전국 비대면</p>
+              <p className="mt-2 text-sm font-bold text-[#10243f] sm:mt-3">전국 비대면</p>
               <p className="mt-1 text-xs leading-5 text-slate-500">지역과 관계없이 진행</p>
             </li>
           </ul>
         </section>
 
-        <section className="mx-auto max-w-7xl px-3 py-24 sm:px-6 sm:py-28 lg:px-8">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+        <section className="mx-auto max-w-7xl px-1 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
+          <div className="flex flex-col justify-between gap-6 sm:gap-8 xl:flex-row xl:items-end">
             <SectionHeading
               eyebrow="YOUR SITUATION"
-              title="필요한 세무 서비스를 상황으로 찾아보세요."
+              title={
+                <>
+                  <span className="block xl:inline">필요한 세무 서비스를</span>{' '}
+                  <span className="block xl:inline">상황으로 찾아보세요.</span>
+                </>
+              }
               description="무슨 세목인지 정확히 몰라도 괜찮습니다. 지금 겪고 있는 상황에서 시작하면 됩니다."
+              wide
+              singleLineOnDesktop
             />
             <Link
               href="/service"
@@ -277,7 +312,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-10 grid gap-4 sm:mt-12 sm:gap-5 md:grid-cols-2 xl:grid-cols-4">
             {serviceCards.map((service) => {
               const Icon = service.icon
 
@@ -285,7 +320,7 @@ export default function Home() {
                 <Link
                   key={service.title}
                   href="/service"
-                  className="group flex min-h-[330px] flex-col rounded-[1.75rem] border border-[#dfe5ec] bg-white p-7 transition duration-300 hover:-translate-y-1 hover:border-[#adc4e4] hover:shadow-[0_18px_45px_rgba(16,36,63,0.09)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4779bf]"
+                  className="group flex flex-col rounded-[1.5rem] border border-[#dfe5ec] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-[#adc4e4] hover:shadow-[0_18px_45px_rgba(16,36,63,0.09)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4779bf] sm:min-h-[330px] sm:rounded-[1.75rem] sm:p-7"
                 >
                   <div className="flex items-start justify-between">
                     <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#edf4ff] text-[#4779bf]">
@@ -297,8 +332,14 @@ export default function Home() {
                     />
                   </div>
                   <p className="mt-7 text-xs font-bold tracking-[0.18em] text-[#6c8ebc]">{service.eyebrow}</p>
-                  <h3 className="mt-3 text-xl font-bold tracking-[-0.025em] text-[#10243f]">{service.title}</h3>
-                  <p className="mt-4 text-sm leading-6 text-slate-600">{service.description}</p>
+                  <h3 className="mt-3 text-xl font-bold tracking-[-0.025em] text-[#10243f] xl:whitespace-nowrap">{service.title}</h3>
+                  <p className="mt-4 text-sm leading-6 text-slate-600">
+                    {service.description.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </p>
                   <ul className="mt-auto space-y-2 pt-7">
                     {service.items.map((item) => (
                       <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
@@ -313,9 +354,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-3 pb-24 sm:px-6 sm:pb-28 lg:px-8">
+        <section className="mx-auto max-w-7xl px-1 pb-16 sm:px-6 sm:pb-20 lg:px-8 lg:pb-28">
           <div className="overflow-hidden rounded-[2rem] bg-[#10243f] lg:grid lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="relative flex min-h-[390px] flex-col justify-between overflow-hidden p-8 text-white sm:p-12 lg:min-h-[580px] lg:p-14">
+            <div className="relative flex min-h-[420px] flex-col justify-between overflow-hidden p-6 text-white sm:p-10 lg:min-h-[580px] lg:p-14">
               <div
                 className="pointer-events-none absolute inset-0"
                 aria-hidden="true"
@@ -326,18 +367,21 @@ export default function Home() {
               />
               <div className="relative">
                 <p className="text-xs font-bold tracking-[0.2em] text-[#9cc3ff]">OUR STANDARD</p>
-                <h2 className="mt-5 max-w-lg text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">
-                  숫자를 처리하는 일을 넘어,
-                  <br />
-                  결정할 수 있게 돕습니다.
+                <h2 className="mt-4 max-w-lg text-[1.8rem] font-bold leading-[1.22] tracking-[-0.04em] sm:mt-5 sm:text-4xl">
+                  <span className="block lg:inline">숫자를 처리하는 일을</span>{' '}
+                  <span className="block lg:inline">넘어,</span>
+                  <br className="hidden lg:block" />
+                  <span className="block lg:inline">결정할 수 있게 돕습니다.</span>
                 </h2>
-                <p className="mt-6 max-w-md text-base leading-7 text-slate-300">
-                  세금은 고객마다 상황이 다릅니다. 먼저 듣고, 이해할 수 있게 설명하고,
-                  다음 단계까지 안내하는 것을 업무의 기준으로 삼습니다.
+                <p className="mt-5 max-w-lg text-[0.95rem] leading-7 text-slate-300 sm:mt-6 sm:text-base">
+                  <span className="block">세금은 고객마다 상황이 다릅니다.</span>
+                  <span className="block">먼저 듣고, 이해할 수 있게 설명하고</span>
+                  <span className="block">다음 단계까지 안내하는 것을</span>
+                  <span className="block">업무의 기준으로 삼습니다.</span>
                 </p>
               </div>
 
-              <blockquote className="relative mt-12 border-l border-[#77a9ef] pl-5 text-sm leading-6 text-slate-200">
+              <blockquote className="relative mt-10 border-l border-[#77a9ef] pl-4 text-sm leading-6 text-slate-200 sm:mt-12 sm:pl-5">
                 “장기적인 관점에서 사업의 기반을 설계하는
                 <br className="hidden sm:block" /> 세무 파트너가 되겠습니다.”
               </blockquote>
@@ -348,7 +392,7 @@ export default function Home() {
                 const Icon = principle.icon
 
                 return (
-                  <article key={principle.title} className="bg-white p-8 sm:p-9 lg:flex lg:items-center lg:gap-7 lg:px-12">
+                  <article key={principle.title} className="bg-white p-6 sm:p-8 lg:flex lg:items-center lg:gap-7 lg:px-12">
                     <span className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-[#edf4ff] text-[#4779bf]">
                       <Icon className="h-6 w-6" strokeWidth={1.8} aria-hidden="true" />
                     </span>
@@ -364,41 +408,33 @@ export default function Home() {
         </section>
 
         <section className="border-y border-slate-200 bg-white">
-          <div className="mx-auto max-w-7xl px-3 py-24 sm:px-6 sm:py-28 lg:px-8">
+          <div className="mx-auto max-w-7xl px-1 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
             <SectionHeading
               eyebrow="PROCESS"
-              title="처음 맡기셔도, 다음 단계가 보이도록."
+              title={
+                <>
+                  <span className="block sm:inline">처음 맡기셔도,</span>{' '}
+                  <span className="block sm:inline">다음 단계가 보이도록.</span>
+                </>
+              }
               description="상담부터 업무 완료까지 필요한 내용과 일정을 순서대로 안내합니다."
             />
 
-            <ol className="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-0">
-              {processSteps.map((step, index) => (
-                <li
-                  key={step.number}
-                  className={`relative border-t border-slate-300 pt-7 lg:px-7 ${
-                    index === 0 ? 'lg:pl-0' : ''
-                  } ${index === processSteps.length - 1 ? 'lg:pr-0' : ''}`}
-                >
-                  <span className="absolute -top-[5px] left-0 h-2.5 w-2.5 rounded-full bg-[#4779bf] lg:left-7 first:lg:left-0" aria-hidden="true" />
-                  <p className="text-xs font-bold tracking-[0.18em] text-[#4779bf]">{step.number}</p>
-                  <h3 className="mt-4 text-xl font-bold text-[#10243f]">{step.title}</h3>
-                  <p className="mt-3 max-w-xs text-sm leading-6 text-slate-600">{step.description}</p>
-                </li>
-              ))}
-            </ol>
+            <ProcessTimeline steps={processSteps} />
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-3 py-24 sm:px-6 sm:py-28 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-[2rem] bg-[#eaf1fa] p-8 sm:p-12 lg:p-14">
+        <section className="mx-auto max-w-7xl px-1 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
+          <div className="grid gap-5 sm:gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="rounded-[1.5rem] bg-[#eaf1fa] p-6 sm:rounded-[2rem] sm:p-10 lg:p-14">
               <p className="text-xs font-bold tracking-[0.2em] text-[#4779bf]">YOUR TAX PARTNER</p>
-              <h2 className="mt-5 text-3xl font-bold leading-tight tracking-[-0.04em] text-[#10243f] sm:text-4xl">
-                고객의 상황을 이해하는 것에서
-                <br />
-                세무 업무를 시작합니다.
+              <h2 className="mt-4 text-[1.8rem] font-bold leading-[1.22] tracking-[-0.04em] text-[#10243f] sm:mt-5 sm:text-4xl">
+                <span className="block lg:inline">고객의 상황을 이해하는</span>{' '}
+                <span className="block lg:inline">것에서</span>
+                <br className="hidden lg:block" />
+                <span className="block lg:inline">세무 업무를 시작합니다.</span>
               </h2>
-              <p className="mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+              <p className="mt-5 max-w-xl text-[0.95rem] leading-7 text-slate-600 sm:mt-6 sm:text-lg sm:leading-8">
                 단순한 신고 대행을 넘어, 사업과 자산의 흐름을 함께 살펴 가장 합리적인 방향을 찾겠습니다.
               </p>
               <Link
@@ -410,7 +446,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="flex flex-col rounded-[2rem] border border-slate-200 bg-white p-8 sm:p-12 lg:p-14">
+            <div className="flex flex-col rounded-[1.5rem] border border-slate-200 bg-white p-6 sm:rounded-[2rem] sm:p-10 lg:p-14">
               <div>
                 <p className="text-sm font-semibold text-[#4779bf]">권도윤 대표 세무사</p>
                 <p className="mt-2 text-2xl font-bold tracking-[-0.03em] text-[#10243f]">디 케빈즈 택스랩</p>
@@ -438,11 +474,16 @@ export default function Home() {
         </section>
 
         <section className="bg-[#f0f4f8]">
-          <div className="mx-auto max-w-7xl px-3 py-24 sm:px-6 sm:py-28 lg:px-8">
-            <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <div className="mx-auto max-w-7xl px-1 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
+            <div className="flex flex-col justify-between gap-6 sm:gap-8 lg:flex-row lg:items-end">
               <SectionHeading
                 eyebrow="TAX INSIGHT"
-                title="세무 판단에 필요한 정보를 쉽게 정리합니다."
+                title={
+                  <>
+                    <span className="block sm:inline">세무 판단에 필요한 정보를</span>{' '}
+                    <span className="block sm:inline">쉽게 정리합니다.</span>
+                  </>
+                }
                 description="복잡한 제도를 그대로 옮기기보다 실제 사업자가 궁금해하는 질문부터 설명합니다."
               />
               <Link
@@ -454,42 +495,24 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="mt-12 grid gap-5 lg:grid-cols-3">
-              {insightCards.map((insight) => (
-                <Link
-                  key={insight.title}
-                  href="/blog"
-                  className="group flex min-h-[285px] flex-col rounded-[1.75rem] border border-slate-200 bg-white p-7 transition hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(16,36,63,0.08)]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full bg-[#edf4ff] px-3 py-1.5 text-xs font-bold text-[#4779bf]">
-                      {insight.label}
-                    </span>
-                    <BookOpenText className="h-5 w-5 text-slate-300 transition group-hover:text-[#4779bf]" aria-hidden="true" />
-                  </div>
-                  <h3 className="mt-8 text-xl font-bold leading-8 tracking-[-0.025em] text-[#10243f]">
-                    {insight.title}
-                  </h3>
-                  <p className="mt-4 text-sm leading-6 text-slate-600">{insight.description}</p>
-                  <span className="mt-auto inline-flex items-center gap-2 pt-7 text-sm font-bold text-[#4779bf]">
-                    블로그에서 확인
-                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </span>
-                </Link>
-              ))}
-            </div>
+            <HomeInsightCarousel items={insightCards} />
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-7xl gap-12 px-3 py-24 sm:px-6 sm:py-28 lg:grid-cols-[0.75fr_1.25fr] lg:px-8">
+        <section className="mx-auto grid max-w-7xl gap-8 px-1 py-16 sm:gap-12 sm:px-6 sm:py-20 lg:grid-cols-[0.75fr_1.25fr] lg:px-8 lg:py-28">
           <div>
             <SectionHeading
               eyebrow="FAQ"
-              title="상담 전에 많이 물어보시는 내용입니다."
+              title={
+                <>
+                  <span className="block sm:inline">상담 전에 많이 물어보시는</span>{' '}
+                  <span className="block sm:inline">내용입니다.</span>
+                </>
+              }
             />
             <Link
               href="/faq"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#315f9f] transition hover:text-[#10243f]"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#315f9f] transition hover:text-[#10243f]"
             >
               자주 묻는 질문 전체 보기
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -513,8 +536,8 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-3 pb-6 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-[2rem] bg-[#10243f] px-7 py-12 text-white sm:px-12 sm:py-14 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:px-16">
+        <section className="mx-auto max-w-7xl px-1 pb-5 sm:px-6 sm:pb-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-[1.5rem] bg-[#10243f] px-6 py-10 text-white sm:rounded-[2rem] sm:px-12 sm:py-14 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:px-16">
             <div
               className="pointer-events-none absolute inset-0"
               aria-hidden="true"
@@ -525,8 +548,9 @@ export default function Home() {
             />
             <div className="relative max-w-2xl">
               <p className="text-xs font-bold tracking-[0.2em] text-[#9cc3ff]">LET&apos;S TALK</p>
-              <h2 className="mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
-                세무 고민, 혼자 정리하지 않아도 됩니다.
+              <h2 className="mt-4 text-[1.8rem] font-bold leading-[1.22] tracking-[-0.04em] sm:text-4xl">
+                <span className="block lg:inline">세무 고민,</span>{' '}
+                <span className="block lg:inline">혼자 정리하지 않아도 됩니다.</span>
               </h2>
               <p className="mt-4 text-base leading-7 text-slate-300">
                 현재 상황을 알려주시면 필요한 업무와 다음 단계를 함께 정리해 드립니다.
